@@ -2,5 +2,6 @@
 
 ## LABs
 
-* [LAB1](README.md)
+* [MAIN](README.md)
+* [LAB1](<README (1).md>)
 * [LAB2](labs/lab2.md)
