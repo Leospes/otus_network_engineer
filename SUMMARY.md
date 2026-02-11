@@ -1,4 +1,4 @@
 # Table of contents
 
-* [otus\_network\_engineer](README.md)
-* [Enabling GitHub Sync | GitBook Documentation](enabling-github-sync-or-gitbook-documentation.md)
+* [LAB1](README.md)
+* [LAB2](lab2.md)
