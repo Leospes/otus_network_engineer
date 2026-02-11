@@ -1,8 +1,12 @@
 # otus\_network\_engineer
 
-{% hint style="success" %}
-Тест
-{% endhint %}
+####
+
+|   |   |   |
+| - | - | - |
+| 1 | 2 | 3 |
+|   |   |   |
+|   |   |   |
 
 #### Тест2
 
