@@ -1,4 +1,4 @@
-# otus\_network\_engineer
+# Copy of LAB1
 
 ## Проектирование адресного пространства
 
@@ -10,7 +10,7 @@
 
 #### Реализованная топология CLOS
 
-<figure><img src=".gitbook/assets/Топология Lab_1.PNG" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/Топология Lab_1.PNG" alt=""><figcaption></figcaption></figure>
 
 #### Таблица адресации
 
