@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Page 1](README.md)
+* [otus\_network\_engineer](README.md)
 
 ## lab1
 
