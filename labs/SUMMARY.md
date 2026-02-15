@@ -1,8 +1,9 @@
 # Table of contents
 
-## LAB1
+* [Page 1](README.md)
 
-* [LAB1](README.md)
+## lab1
+
 * [LAB1](lab1/lab1.md)
 
 ## lab2
