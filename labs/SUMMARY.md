@@ -1,6 +1,10 @@
 # Table of contents
 
-## LABS
+## LAB1
 
 * [LAB1](README.md)
-* [LAB1](labs/lab1.md)
+* [LAB1](lab1/lab1.md)
+
+## lab2
+
+* [LAB2](lab2/lab2.md)
