@@ -9,3 +9,7 @@
 ## lab2
 
 * [LAB2](lab2/lab2.md)
+
+## LAB3
+
+* [LAB3](lab3/lab3.md)
