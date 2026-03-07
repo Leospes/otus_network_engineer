@@ -9,7 +9,7 @@ description: Построение Underlay сети (OSPF)
 * Настроить OSPF для Underlay сети
 * Убедиться в наличии IP связанности между устройствами в OSFP домене
 
-#### Используемая схема сети на основе коммутаров Nexus 9000/9300 Series:
+#### Используемая схема сети на основе коммутаторов Nexus 9000/9300 Series:
 
 <figure><img src="../.gitbook/assets/Топология Lab_1.PNG" alt=""><figcaption></figcaption></figure>
 
