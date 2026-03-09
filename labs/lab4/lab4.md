@@ -665,13 +665,12 @@ BGP neighbor is 30.1.1.2, remote AS 65503, ebgp link, Peer index 5
 
 Видно, что до подсетей удалённых хостов имеются равноценные маршруты через интерфейсы в сторону спайнов, то есть имеется ECMP (Equal-cost multi-path routing). Данного результата удалось достичь благодаря настройке maximum-paths 2 на лифах:
 
-```
-LEAF1# show bgp all
+<pre><code>LEAF1# show bgp all
 BGP routing table information for VRF default, address family IPv4 Unicast
 BGP table version is 18, Local Router ID is 1.1.1.1
 Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
 Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
-Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - best2
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, &#x26; - backup, 2 - best2
 
    Network            Next Hop            Metric     LocPrf     Weight Path
 *>r1.1.1.1/32         0.0.0.0                  0        100      32768 ?
@@ -706,15 +705,15 @@ IP Route Table for VRF "default"
 '*' denotes best ucast next-hop
 '**' denotes best mcast next-hop
 '[x/y]' denotes [preference/metric]
-'%<string>' in via output denotes VRF <string>
+'%&#x3C;string>' in via output denotes VRF &#x3C;string>
 
-2.2.2.2/32, ubest/mbest: 2/0
-    *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
-    *via 10.1.2.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
-3.3.3.3/32, ubest/mbest: 2/0
-    *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
-    *via 10.1.2.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
-10.10.10.10/32, ubest/mbest: 1/0
+<strong>2.2.2.2/32, ubest/mbest: 2/0
+</strong><strong>    *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
+</strong><strong>    *via 10.1.2.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
+</strong><strong>3.3.3.3/32, ubest/mbest: 2/0
+</strong><strong>    *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
+</strong><strong>    *via 10.1.2.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
+</strong>10.10.10.10/32, ubest/mbest: 1/0
     *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
 20.1.1.0/30, ubest/mbest: 1/0
     *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
@@ -726,16 +725,16 @@ IP Route Table for VRF "default"
     *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
 30.1.2.0/30, ubest/mbest: 1/0
     *via 10.1.2.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
-192.168.2.0/24, ubest/mbest: 2/0
-    *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
-    *via 10.1.2.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
-192.168.3.0/24, ubest/mbest: 2/0
-    *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
-    *via 10.1.2.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
-192.168.4.0/24, ubest/mbest: 2/0
-    *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
-    *via 10.1.2.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
-```
+<strong>192.168.2.0/24, ubest/mbest: 2/0
+</strong><strong>    *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
+</strong><strong>    *via 10.1.2.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
+</strong><strong>192.168.3.0/24, ubest/mbest: 2/0
+</strong><strong>    *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
+</strong><strong>    *via 10.1.2.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
+</strong><strong>192.168.4.0/24, ubest/mbest: 2/0
+</strong><strong>    *via 10.1.1.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
+</strong><strong>    *via 10.1.2.1, [20/0], 00:01:50, bgp-65501, external, tag 65500
+</strong></code></pre>
 
 Маршруты на SPINE1
 
@@ -838,4 +837,8 @@ PC1> ping 192.168.4.2
 
 Таким образом, нам удалось настроить Underlay с использованием eBGP и обеспечить этим связность между подсетями фабрики.
 
-Спайны были помещены в одну AS 65500, так как это считается best practice вариантом для избежания неоптимальной маршрутизации при&#x20;
+Спайны были помещены в одну AS 65500, так как это считается best practice вариантом для избежания неоптимальной маршрутизации при отказе одного из линков.
+
+Соседства успешно поднялись и маршрутная информация получена всеми устройствами.
+
+Связность между узлами сети имеется.&#x20;
