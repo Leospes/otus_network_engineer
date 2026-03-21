@@ -21,3 +21,7 @@
 ## LAB5
 
 * [LAB5](lab5/lab5.md)
+
+## LAB6
+
+* [LAB6](lab6/lab6.md)
