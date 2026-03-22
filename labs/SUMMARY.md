@@ -25,3 +25,11 @@
 ## LAB6
 
 * [LAB6](lab6/lab6.md)
+
+## LAB7
+
+* [LAB7](lab7/lab7.md)
+
+## LAB8
+
+* [LAB8](lab8/lab8.md)
