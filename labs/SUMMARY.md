@@ -33,3 +33,7 @@
 ## LAB8
 
 * [LAB8](lab8/lab8.md)
+
+## Project
+
+* [Итоговая работа](project/itogovaya-rabota.md)
