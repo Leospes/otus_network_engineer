@@ -36,4 +36,4 @@
 
 ## Project
 
-* [Итоговая работа](project/itogovaya-rabota.md)
+* [Проектная работа](project/proektnaya-rabota.md)
