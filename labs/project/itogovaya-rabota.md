@@ -1587,11 +1587,1413 @@ router bgp 65500
 
 </details>
 
+<details>
+
+<summary>EDGE</summary>
+
+```
+feature bgp
+
+route-map DIRECT-ROUTES-MAP permit 10
+
+interface Ethernet1/1
+  no switchport
+  ip address 192.168.3.2/30
+  no shutdown
+
+interface Ethernet1/2
+  no switchport
+  ip address 192.168.3.6/30
+  no shutdown
+  
+interface loopback1
+  ip address 4.4.4.4/32
+  
+router bgp 65600
+  address-family ipv4 unicast
+    redistribute direct route-map DIRECT-ROUTES-MAP
+    maximum-paths 2
+  neighbor 192.168.3.1
+    remote-as 65503
+    address-family ipv4 unicast
+      as-override
+      disable-peer-as-check
+  neighbor 192.168.3.5
+    remote-as 65503
+    address-family ipv4 unicast
+      as-override
+      disable-peer-as-check
+```
+
+</details>
+
 #### Проверка
 
-ipv4 и l2vpn evpn маршруты
+ipv4 маршруты
 
-LEAF1
+<details>
+
+<summary>LEAF1-1</summary>
+
+```
+LEAF1-1# show ip bgp summary
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 1.1.1.1, local AS number 65401
+BGP table version is 49, IPv4 Unicast config peers 2, capable peers 2
+29 network entries and 51 paths using 10580 bytes of memory
+BGP attribute entries [9/3240], BGP AS path entries [8/88]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.1.1        4 65400      28306      28294       49    0    0 23:34:38 24        
+10.1.2.1        4 65400      28306      28292       49    0    0 23:34:34 24        
+LEAF1-1# show ip route
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+1.1.1.1/32, ubest/mbest: 2/0, attached
+    *via 1.1.1.1, Lo1, [0/0], 23:37:16, local
+    *via 1.1.1.1, Lo1, [0/0], 23:37:16, direct
+1.1.1.2/32, ubest/mbest: 2/0
+    *via 10.1.1.1, [20/0], 23:35:15, bgp-65401, external, tag 65400
+    *via 10.1.2.1, [20/0], 23:35:11, bgp-65401, external, tag 65400
+1.1.1.3/32, ubest/mbest: 2/0
+    *via 10.1.1.1, [20/0], 23:35:09, bgp-65401, external, tag 65400
+    *via 10.1.2.1, [20/0], 23:35:07, bgp-65401, external, tag 65400
+1.1.1.4/32, ubest/mbest: 2/0
+    *via 10.1.1.1, [20/0], 23:35:15, bgp-65401, external, tag 65400
+    *via 10.1.2.1, [20/0], 23:35:11, bgp-65401, external, tag 65400
+1.2.1.1/32, ubest/mbest: 2/0
+    *via 10.1.1.1, [20/0], 23:32:15, bgp-65401, external, tag 65400
+    *via 10.1.2.1, [20/0], 23:32:15, bgp-65401, external, tag 65400
+1.2.1.2/32, ubest/mbest: 2/0
+    *via 10.1.1.1, [20/0], 23:32:15, bgp-65401, external, tag 65400
+    *via 10.1.2.1, [20/0], 23:32:15, bgp-65401, external, tag 65400
+1.2.1.3/32, ubest/mbest: 2/0
+    *via 10.1.1.1, [20/0], 23:34:55, bgp-65401, external, tag 65400
+    *via 10.1.2.1, [20/0], 23:34:52, bgp-65401, external, tag 65400
+10.1.1.0/30, ubest/mbest: 1/0, attached
+    *via 10.1.1.2, Eth1/1, [0/0], 23:35:31, direct
+10.1.1.2/32, ubest/mbest: 1/0, attached
+    *via 10.1.1.2, Eth1/1, [0/0], 23:35:31, local
+10.1.1.100/32, ubest/mbest: 2/0
+    *via 10.1.1.1, [20/0], 23:32:15, bgp-65401, external, tag 65400
+    *via 10.1.2.1, [20/0], 23:32:15, bgp-65401, external, tag 65400
+10.1.2.0/30, ubest/mbest: 1/0, attached
+    *via 10.1.2.2, Eth1/2, [0/0], 23:35:31, direct
+10.1.2.2/32, ubest/mbest: 1/0, attached
+    *via 10.1.2.2, Eth1/2, [0/0], 23:35:31, local
+10.2.1.0/30, ubest/mbest: 1/0
+    *via 10.1.2.1, [20/0], 23:34:52, bgp-65401, external, tag 65400
+10.2.2.0/30, ubest/mbest: 1/0
+    *via 10.1.1.1, [20/0], 23:34:55, bgp-65401, external, tag 65400
+10.10.10.1/32, ubest/mbest: 1/0
+    *via 10.1.1.1, [20/0], 23:35:15, bgp-65401, external, tag 65400
+10.10.10.2/32, ubest/mbest: 1/0
+    *via 10.1.2.1, [20/0], 23:35:11, bgp-65401, external, tag 65400
+10.20.10.1/32, ubest/mbest: 1/0
+    *via 10.1.2.1, [20/0], 23:34:52, bgp-65401, external, tag 65400
+10.20.10.2/32, ubest/mbest: 1/0
+    *via 10.1.1.1, [20/0], 23:34:55, bgp-65401, external, tag 65400
+12.12.12.0/30, ubest/mbest: 1/0
+    *via 10.1.2.1, [20/0], 23:35:11, bgp-65401, external, tag 65400
+12.12.12.4/30, ubest/mbest: 1/0
+    *via 10.1.1.1, [20/0], 23:35:15, bgp-65401, external, tag 65400
+20.1.1.0/30, ubest/mbest: 1/0
+    *via 10.1.1.1, [20/0], 23:35:15, bgp-65401, external, tag 65400
+20.1.2.0/30, ubest/mbest: 1/0
+    *via 10.1.2.1, [20/0], 23:35:11, bgp-65401, external, tag 65400
+20.2.1.0/30, ubest/mbest: 1/0
+    *via 10.1.2.1, [20/0], 23:34:52, bgp-65401, external, tag 65400
+20.2.2.0/30, ubest/mbest: 1/0
+    *via 10.1.1.1, [20/0], 23:34:55, bgp-65401, external, tag 65400
+30.1.1.0/30, ubest/mbest: 1/0
+    *via 10.1.1.1, [20/0], 23:35:15, bgp-65401, external, tag 65400
+30.1.2.0/30, ubest/mbest: 1/0
+    *via 10.1.2.1, [20/0], 23:35:11, bgp-65401, external, tag 65400
+30.2.1.0/30, ubest/mbest: 1/0
+    *via 10.1.2.1, [20/0], 23:34:52, bgp-65401, external, tag 65400
+30.2.2.0/30, ubest/mbest: 1/0
+    *via 10.1.1.1, [20/0], 23:34:55, bgp-65401, external, tag 65400
+40.1.1.0/30, ubest/mbest: 1/0
+    *via 10.1.1.1, [20/0], 23:35:15, bgp-65401, external, tag 65400
+40.1.2.0/30, ubest/mbest: 1/0
+    *via 10.1.2.1, [20/0], 23:35:11, bgp-65401, external, tag 65400
+192.168.2.0/30, ubest/mbest: 2/0
+    *via 10.1.1.1, [20/0], 23:34:54, bgp-65401, external, tag 65400
+    *via 10.1.2.1, [20/0], 23:34:52, bgp-65401, external, tag 65400
+
+LEAF1-1# show ip route vrf TENANT_1
+IP Route Table for VRF "TENANT_1"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+4.4.4.4/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:36:47, bgp-65401, external, tag 65400, segid: 100501 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.16.65.3/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 00:49:33, bgp-65401, external, tag 65400, segid: 100501 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.17.67.0/24, ubest/mbest: 1/0, attached
+    *via 172.17.67.1, Vlan67, [0/0], 23:40:06, direct
+172.17.67.1/32, ubest/mbest: 1/0, attached
+    *via 172.17.67.1, Vlan67, [0/0], 23:40:06, local
+172.17.67.2/32, ubest/mbest: 1/0, attached
+    *via 172.17.67.2, Vlan67, [190/0], 00:38:31, hmm
+172.17.67.3/32, ubest/mbest: 1/0, attached
+    *via 172.17.67.3, Vlan67, [190/0], 00:38:31, hmm
+172.17.67.4/32, ubest/mbest: 1/0
+    *via 1.1.1.2%default, [20/0], 23:24:47, bgp-65401, external, tag 65400, segid: 100501 tunnelid: 0x1010102 encap: VXLAN
+ 
+172.17.67.5/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 00:47:22, bgp-65401, external, tag 65400, segid: 100501 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.17.67.6/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 00:47:28, bgp-65401, external, tag 65400, segid: 100501 tunnelid: 0x1020103 encap: VXLAN
+ 
+192.168.3.0/30, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:36:47, bgp-65401, external, tag 65400, segid: 100501 tunnelid: 0x1020103 encap: VXLAN
+ 
+192.168.3.4/30, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:36:47, bgp-65401, external, tag 65400, segid: 100501 tunnelid: 0x1020103 encap: VXLAN
+```
+
+</details>
+
+<details>
+
+<summary>LEAF1-2</summary>
+
+```
+LEAF1-2# show ip bgp summary
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 1.1.1.2, local AS number 65402
+BGP table version is 49, IPv4 Unicast config peers 2, capable peers 2
+29 network entries and 51 paths using 10580 bytes of memory
+BGP attribute entries [9/3240], BGP AS path entries [8/88]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+20.1.1.1        4 65400      28309      28297       49    0    0 23:34:47 24        
+20.1.2.1        4 65400      28307      28295       49    0    0 23:34:42 24        
+LEAF1-2# show ip route
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+1.1.1.1/32, ubest/mbest: 2/0
+    *via 20.1.1.1, [20/0], 23:35:21, bgp-65402, external, tag 65400
+    *via 20.1.2.1, [20/0], 23:35:14, bgp-65402, external, tag 65400
+1.1.1.2/32, ubest/mbest: 2/0, attached
+    *via 1.1.1.2, Lo1, [0/0], 23:37:24, local
+    *via 1.1.1.2, Lo1, [0/0], 23:37:24, direct
+1.1.1.3/32, ubest/mbest: 2/0
+    *via 20.1.1.1, [20/0], 23:35:15, bgp-65402, external, tag 65400
+    *via 20.1.2.1, [20/0], 23:35:13, bgp-65402, external, tag 65400
+1.1.1.4/32, ubest/mbest: 2/0
+    *via 20.1.1.1, [20/0], 23:35:21, bgp-65402, external, tag 65400
+    *via 20.1.2.1, [20/0], 23:35:14, bgp-65402, external, tag 65400
+1.2.1.1/32, ubest/mbest: 2/0
+    *via 20.1.1.1, [20/0], 23:32:21, bgp-65402, external, tag 65400
+    *via 20.1.2.1, [20/0], 23:32:21, bgp-65402, external, tag 65400
+1.2.1.2/32, ubest/mbest: 2/0
+    *via 20.1.1.1, [20/0], 23:32:21, bgp-65402, external, tag 65400
+    *via 20.1.2.1, [20/0], 23:32:21, bgp-65402, external, tag 65400
+1.2.1.3/32, ubest/mbest: 2/0
+    *via 20.1.1.1, [20/0], 23:35:01, bgp-65402, external, tag 65400
+    *via 20.1.2.1, [20/0], 23:34:58, bgp-65402, external, tag 65400
+10.1.1.0/30, ubest/mbest: 1/0
+    *via 20.1.1.1, [20/0], 23:35:21, bgp-65402, external, tag 65400
+10.1.1.100/32, ubest/mbest: 2/0
+    *via 20.1.1.1, [20/0], 23:32:21, bgp-65402, external, tag 65400
+    *via 20.1.2.1, [20/0], 23:32:21, bgp-65402, external, tag 65400
+10.1.2.0/30, ubest/mbest: 1/0
+    *via 20.1.2.1, [20/0], 23:35:14, bgp-65402, external, tag 65400
+10.2.1.0/30, ubest/mbest: 1/0
+    *via 20.1.2.1, [20/0], 23:34:58, bgp-65402, external, tag 65400
+10.2.2.0/30, ubest/mbest: 1/0
+    *via 20.1.1.1, [20/0], 23:35:01, bgp-65402, external, tag 65400
+10.10.10.1/32, ubest/mbest: 1/0
+    *via 20.1.1.1, [20/0], 23:35:21, bgp-65402, external, tag 65400
+10.10.10.2/32, ubest/mbest: 1/0
+    *via 20.1.2.1, [20/0], 23:35:14, bgp-65402, external, tag 65400
+10.20.10.1/32, ubest/mbest: 1/0
+    *via 20.1.2.1, [20/0], 23:34:58, bgp-65402, external, tag 65400
+10.20.10.2/32, ubest/mbest: 1/0
+    *via 20.1.1.1, [20/0], 23:35:01, bgp-65402, external, tag 65400
+12.12.12.0/30, ubest/mbest: 1/0
+    *via 20.1.2.1, [20/0], 23:35:14, bgp-65402, external, tag 65400
+12.12.12.4/30, ubest/mbest: 1/0
+    *via 20.1.1.1, [20/0], 23:35:21, bgp-65402, external, tag 65400
+20.1.1.0/30, ubest/mbest: 1/0, attached
+    *via 20.1.1.2, Eth1/1, [0/0], 23:35:39, direct
+20.1.1.2/32, ubest/mbest: 1/0, attached
+    *via 20.1.1.2, Eth1/1, [0/0], 23:35:39, local
+20.1.2.0/30, ubest/mbest: 1/0, attached
+    *via 20.1.2.2, Eth1/2, [0/0], 23:35:38, direct
+20.1.2.2/32, ubest/mbest: 1/0, attached
+    *via 20.1.2.2, Eth1/2, [0/0], 23:35:38, local
+20.2.1.0/30, ubest/mbest: 1/0
+    *via 20.1.2.1, [20/0], 23:34:58, bgp-65402, external, tag 65400
+20.2.2.0/30, ubest/mbest: 1/0
+    *via 20.1.1.1, [20/0], 23:35:01, bgp-65402, external, tag 65400
+30.1.1.0/30, ubest/mbest: 1/0
+    *via 20.1.1.1, [20/0], 23:35:21, bgp-65402, external, tag 65400
+30.1.2.0/30, ubest/mbest: 1/0
+    *via 20.1.2.1, [20/0], 23:35:14, bgp-65402, external, tag 65400
+30.2.1.0/30, ubest/mbest: 1/0
+    *via 20.1.2.1, [20/0], 23:34:58, bgp-65402, external, tag 65400
+30.2.2.0/30, ubest/mbest: 1/0
+    *via 20.1.1.1, [20/0], 23:35:01, bgp-65402, external, tag 65400
+40.1.1.0/30, ubest/mbest: 1/0
+    *via 20.1.1.1, [20/0], 23:35:21, bgp-65402, external, tag 65400
+40.1.2.0/30, ubest/mbest: 1/0
+    *via 20.1.2.1, [20/0], 23:35:14, bgp-65402, external, tag 65400
+192.168.2.0/30, ubest/mbest: 2/0
+    *via 20.1.1.1, [20/0], 23:35:00, bgp-65402, external, tag 65400
+    *via 20.1.2.1, [20/0], 23:34:58, bgp-65402, external, tag 65400
+
+LEAF1-2# show ip route vrf TENANT_1
+IP Route Table for VRF "TENANT_1"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+4.4.4.4/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:36:52, bgp-65402, external, tag 65400, segid: 100501 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.16.65.3/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 00:49:38, bgp-65402, external, tag 65400, segid: 100501 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.17.67.0/24, ubest/mbest: 1/0, attached
+    *via 172.17.67.1, Vlan67, [0/0], 23:40:13, direct
+172.17.67.1/32, ubest/mbest: 1/0, attached
+    *via 172.17.67.1, Vlan67, [0/0], 23:40:13, local
+172.17.67.2/32, ubest/mbest: 1/0
+    *via 1.1.1.1%default, [20/0], 23:25:17, bgp-65402, external, tag 65400, segid: 100501 tunnelid: 0x1010101 encap: VXLAN
+ 
+172.17.67.3/32, ubest/mbest: 1/0
+    *via 1.1.1.1%default, [20/0], 23:24:57, bgp-65402, external, tag 65400, segid: 100501 tunnelid: 0x1010101 encap: VXLAN
+ 
+172.17.67.4/32, ubest/mbest: 1/0, attached
+    *via 172.17.67.4, Vlan67, [190/0], 00:38:37, hmm
+172.17.67.5/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 00:47:26, bgp-65402, external, tag 65400, segid: 100501 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.17.67.6/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 00:47:32, bgp-65402, external, tag 65400, segid: 100501 tunnelid: 0x1020103 encap: VXLAN
+ 
+192.168.3.0/30, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:36:52, bgp-65402, external, tag 65400, segid: 100501 tunnelid: 0x1020103 encap: VXLAN
+ 
+192.168.3.4/30, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:36:52, bgp-65402, external, tag 65400, segid: 100501 tunnelid: 0x1020103 encap: VXLAN
+```
+
+</details>
+
+<details>
+
+<summary>LEAF1-3</summary>
+
+```
+LEAF1-3(config-if)# show ip bgp summary
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 1.1.1.3, local AS number 65403
+BGP table version is 49, IPv4 Unicast config peers 2, capable peers 2
+29 network entries and 51 paths using 10580 bytes of memory
+BGP attribute entries [9/3240], BGP AS path entries [8/88]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+30.1.1.1        4 65400      28305      28292       49    0    0 23:34:34 24        
+30.1.2.1        4 65400      28304      28293       49    0    0 23:34:35 24        
+LEAF1-3(config-if)# show ip route
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+1.1.1.1/32, ubest/mbest: 2/0
+    *via 30.1.1.1, [20/0], 23:35:12, bgp-65403, external, tag 65400
+    *via 30.1.2.1, [20/0], 23:35:20, bgp-65403, external, tag 65400
+1.1.1.2/32, ubest/mbest: 2/0
+    *via 30.1.1.1, [20/0], 23:35:12, bgp-65403, external, tag 65400
+    *via 30.1.2.1, [20/0], 23:35:20, bgp-65403, external, tag 65400
+1.1.1.3/32, ubest/mbest: 2/0, attached
+    *via 1.1.1.3, Lo1, [0/0], 23:37:12, local
+    *via 1.1.1.3, Lo1, [0/0], 23:37:12, direct
+1.1.1.4/32, ubest/mbest: 2/0
+    *via 30.1.1.1, [20/0], 23:35:12, bgp-65403, external, tag 65400
+    *via 30.1.2.1, [20/0], 23:35:20, bgp-65403, external, tag 65400
+1.2.1.1/32, ubest/mbest: 2/0
+    *via 30.1.1.1, [20/0], 23:32:24, bgp-65403, external, tag 65400
+    *via 30.1.2.1, [20/0], 23:32:24, bgp-65403, external, tag 65400
+1.2.1.2/32, ubest/mbest: 2/0
+    *via 30.1.1.1, [20/0], 23:32:24, bgp-65403, external, tag 65400
+    *via 30.1.2.1, [20/0], 23:32:24, bgp-65403, external, tag 65400
+1.2.1.3/32, ubest/mbest: 2/0
+    *via 30.1.1.1, [20/0], 23:35:05, bgp-65403, external, tag 65400
+    *via 30.1.2.1, [20/0], 23:35:02, bgp-65403, external, tag 65400
+10.1.1.0/30, ubest/mbest: 1/0
+    *via 30.1.1.1, [20/0], 23:35:12, bgp-65403, external, tag 65400
+10.1.1.100/32, ubest/mbest: 2/0
+    *via 30.1.1.1, [20/0], 23:32:24, bgp-65403, external, tag 65400
+    *via 30.1.2.1, [20/0], 23:32:24, bgp-65403, external, tag 65400
+10.1.2.0/30, ubest/mbest: 1/0
+    *via 30.1.2.1, [20/0], 23:35:20, bgp-65403, external, tag 65400
+10.2.1.0/30, ubest/mbest: 1/0
+    *via 30.1.2.1, [20/0], 23:35:02, bgp-65403, external, tag 65400
+10.2.2.0/30, ubest/mbest: 1/0
+    *via 30.1.1.1, [20/0], 23:35:05, bgp-65403, external, tag 65400
+10.10.10.1/32, ubest/mbest: 1/0
+    *via 30.1.1.1, [20/0], 23:35:12, bgp-65403, external, tag 65400
+10.10.10.2/32, ubest/mbest: 1/0
+    *via 30.1.2.1, [20/0], 23:35:20, bgp-65403, external, tag 65400
+10.20.10.1/32, ubest/mbest: 1/0
+    *via 30.1.2.1, [20/0], 23:35:02, bgp-65403, external, tag 65400
+10.20.10.2/32, ubest/mbest: 1/0
+    *via 30.1.1.1, [20/0], 23:35:05, bgp-65403, external, tag 65400
+12.12.12.0/30, ubest/mbest: 1/0
+    *via 30.1.2.1, [20/0], 23:35:20, bgp-65403, external, tag 65400
+12.12.12.4/30, ubest/mbest: 1/0
+    *via 30.1.1.1, [20/0], 23:35:12, bgp-65403, external, tag 65400
+20.1.1.0/30, ubest/mbest: 1/0
+    *via 30.1.1.1, [20/0], 23:35:12, bgp-65403, external, tag 65400
+20.1.2.0/30, ubest/mbest: 1/0
+    *via 30.1.2.1, [20/0], 23:35:20, bgp-65403, external, tag 65400
+20.2.1.0/30, ubest/mbest: 1/0
+    *via 30.1.2.1, [20/0], 23:35:02, bgp-65403, external, tag 65400
+20.2.2.0/30, ubest/mbest: 1/0
+    *via 30.1.1.1, [20/0], 23:35:05, bgp-65403, external, tag 65400
+30.1.1.0/30, ubest/mbest: 1/0, attached
+    *via 30.1.1.2, Eth1/1, [0/0], 23:35:31, direct
+30.1.1.2/32, ubest/mbest: 1/0, attached
+    *via 30.1.1.2, Eth1/1, [0/0], 23:35:31, local
+30.1.2.0/30, ubest/mbest: 1/0, attached
+    *via 30.1.2.2, Eth1/2, [0/0], 23:35:30, direct
+30.1.2.2/32, ubest/mbest: 1/0, attached
+    *via 30.1.2.2, Eth1/2, [0/0], 23:35:30, local
+30.2.1.0/30, ubest/mbest: 1/0
+    *via 30.1.2.1, [20/0], 23:35:02, bgp-65403, external, tag 65400
+30.2.2.0/30, ubest/mbest: 1/0
+    *via 30.1.1.1, [20/0], 23:35:05, bgp-65403, external, tag 65400
+40.1.1.0/30, ubest/mbest: 1/0
+    *via 30.1.1.1, [20/0], 23:35:12, bgp-65403, external, tag 65400
+40.1.2.0/30, ubest/mbest: 1/0
+    *via 30.1.2.1, [20/0], 23:35:20, bgp-65403, external, tag 65400
+192.168.2.0/30, ubest/mbest: 2/0
+    *via 30.1.1.1, [20/0], 23:35:04, bgp-65403, external, tag 65400
+    *via 30.1.2.1, [20/0], 23:35:02, bgp-65403, external, tag 65400
+
+LEAF1-3(config-if)#  show ip route vrf COD
+IP Route Table for VRF "COD"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+4.4.4.4/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:37:24, bgp-65403, external, tag 65400, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.16.65.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.65.1, Vlan65, [0/0], 23:40:30, direct
+172.16.65.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.65.1, Vlan65, [0/0], 23:40:30, local
+172.16.65.2/32, ubest/mbest: 1/0, attached
+    *via 172.16.65.2, Vlan65, [190/0], 00:08:59, hmm
+172.16.65.3/32, ubest/mbest: 1/0
+    *via 10.1.1.100%default, [20/0], 00:50:11, bgp-65403, external, tag 65400, segid: 100500 tunnelid: 0xa010164 encap: VXLAN
+ 
+172.16.66.2/32, ubest/mbest: 1/0
+    *via 1.1.1.4%default, [20/0], 23:24:55, bgp-65403, external, tag 65400, segid: 100500 tunnelid: 0x1010104 encap: VXLAN
+ 
+172.17.67.0/24, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:37:24, bgp-65403, external, tag 65400, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+192.168.3.0/30, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:37:24, bgp-65403, external, tag 65400, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+192.168.3.4/30, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:37:24, bgp-65403, external, tag 65400, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+```
+
+</details>
+
+<details>
+
+<summary>LEAF1-4</summary>
+
+```
+LEAF1-4(config)# show ip bgp summary
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 1.1.1.4, local AS number 65404
+BGP table version is 49, IPv4 Unicast config peers 2, capable peers 2
+29 network entries and 51 paths using 10580 bytes of memory
+BGP attribute entries [9/3240], BGP AS path entries [8/88]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+40.1.1.1        4 65400      28306      28294       49    0    0 23:34:42 24        
+40.1.2.1        4 65400      28306      28294       49    0    0 23:34:41 24        
+LEAF1-4(config)# show ip route
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+1.1.1.1/32, ubest/mbest: 2/0
+    *via 40.1.1.1, [20/0], 23:35:27, bgp-65404, external, tag 65400
+    *via 40.1.2.1, [20/0], 23:35:21, bgp-65404, external, tag 65400
+1.1.1.2/32, ubest/mbest: 2/0
+    *via 40.1.1.1, [20/0], 23:35:27, bgp-65404, external, tag 65400
+    *via 40.1.2.1, [20/0], 23:35:21, bgp-65404, external, tag 65400
+1.1.1.3/32, ubest/mbest: 2/0
+    *via 40.1.1.1, [20/0], 23:35:21, bgp-65404, external, tag 65400
+    *via 40.1.2.1, [20/0], 23:35:20, bgp-65404, external, tag 65400
+1.1.1.4/32, ubest/mbest: 2/0, attached
+    *via 1.1.1.4, Lo1, [0/0], 23:37:24, local
+    *via 1.1.1.4, Lo1, [0/0], 23:37:24, direct
+1.2.1.1/32, ubest/mbest: 2/0
+    *via 40.1.1.1, [20/0], 23:32:28, bgp-65404, external, tag 65400
+    *via 40.1.2.1, [20/0], 23:32:28, bgp-65404, external, tag 65400
+1.2.1.2/32, ubest/mbest: 2/0
+    *via 40.1.1.1, [20/0], 23:32:28, bgp-65404, external, tag 65400
+    *via 40.1.2.1, [20/0], 23:32:28, bgp-65404, external, tag 65400
+1.2.1.3/32, ubest/mbest: 2/0
+    *via 40.1.1.1, [20/0], 23:35:08, bgp-65404, external, tag 65400
+    *via 40.1.2.1, [20/0], 23:35:05, bgp-65404, external, tag 65400
+10.1.1.0/30, ubest/mbest: 1/0
+    *via 40.1.1.1, [20/0], 23:35:27, bgp-65404, external, tag 65400
+10.1.1.100/32, ubest/mbest: 2/0
+    *via 40.1.1.1, [20/0], 23:32:28, bgp-65404, external, tag 65400
+    *via 40.1.2.1, [20/0], 23:32:28, bgp-65404, external, tag 65400
+10.1.2.0/30, ubest/mbest: 1/0
+    *via 40.1.2.1, [20/0], 23:35:21, bgp-65404, external, tag 65400
+10.2.1.0/30, ubest/mbest: 1/0
+    *via 40.1.2.1, [20/0], 23:35:05, bgp-65404, external, tag 65400
+10.2.2.0/30, ubest/mbest: 1/0
+    *via 40.1.1.1, [20/0], 23:35:08, bgp-65404, external, tag 65400
+10.10.10.1/32, ubest/mbest: 1/0
+    *via 40.1.1.1, [20/0], 23:35:27, bgp-65404, external, tag 65400
+10.10.10.2/32, ubest/mbest: 1/0
+    *via 40.1.2.1, [20/0], 23:35:21, bgp-65404, external, tag 65400
+10.20.10.1/32, ubest/mbest: 1/0
+    *via 40.1.2.1, [20/0], 23:35:05, bgp-65404, external, tag 65400
+10.20.10.2/32, ubest/mbest: 1/0
+    *via 40.1.1.1, [20/0], 23:35:08, bgp-65404, external, tag 65400
+12.12.12.0/30, ubest/mbest: 1/0
+    *via 40.1.2.1, [20/0], 23:35:21, bgp-65404, external, tag 65400
+12.12.12.4/30, ubest/mbest: 1/0
+    *via 40.1.1.1, [20/0], 23:35:27, bgp-65404, external, tag 65400
+20.1.1.0/30, ubest/mbest: 1/0
+    *via 40.1.1.1, [20/0], 23:35:27, bgp-65404, external, tag 65400
+20.1.2.0/30, ubest/mbest: 1/0
+    *via 40.1.2.1, [20/0], 23:35:21, bgp-65404, external, tag 65400
+20.2.1.0/30, ubest/mbest: 1/0
+    *via 40.1.2.1, [20/0], 23:35:05, bgp-65404, external, tag 65400
+20.2.2.0/30, ubest/mbest: 1/0
+    *via 40.1.1.1, [20/0], 23:35:08, bgp-65404, external, tag 65400
+30.1.1.0/30, ubest/mbest: 1/0
+    *via 40.1.1.1, [20/0], 23:35:27, bgp-65404, external, tag 65400
+30.1.2.0/30, ubest/mbest: 1/0
+    *via 40.1.2.1, [20/0], 23:35:21, bgp-65404, external, tag 65400
+30.2.1.0/30, ubest/mbest: 1/0
+    *via 40.1.2.1, [20/0], 23:35:05, bgp-65404, external, tag 65400
+30.2.2.0/30, ubest/mbest: 1/0
+    *via 40.1.1.1, [20/0], 23:35:08, bgp-65404, external, tag 65400
+40.1.1.0/30, ubest/mbest: 1/0, attached
+    *via 40.1.1.2, Eth1/1, [0/0], 23:35:40, direct
+40.1.1.2/32, ubest/mbest: 1/0, attached
+    *via 40.1.1.2, Eth1/1, [0/0], 23:35:40, local
+40.1.2.0/30, ubest/mbest: 1/0, attached
+    *via 40.1.2.2, Eth1/2, [0/0], 23:35:40, direct
+40.1.2.2/32, ubest/mbest: 1/0, attached
+    *via 40.1.2.2, Eth1/2, [0/0], 23:35:40, local
+192.168.2.0/30, ubest/mbest: 2/0
+    *via 40.1.1.1, [20/0], 23:35:07, bgp-65404, external, tag 65400
+    *via 40.1.2.1, [20/0], 23:35:05, bgp-65404, external, tag 65400
+
+LEAF1-4(config)# show ip route vrf COD
+IP Route Table for VRF "COD"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+4.4.4.4/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:37:28, bgp-65404, external, tag 65400, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.16.65.2/32, ubest/mbest: 1/0
+    *via 1.1.1.3%default, [20/0], 00:49:24, bgp-65404, external, tag 65400, segid: 100500 tunnelid: 0x1010103 encap: VXLAN
+ 
+172.16.65.3/32, ubest/mbest: 1/0
+    *via 10.1.1.100%default, [20/0], 00:50:14, bgp-65404, external, tag 65400, segid: 100500 tunnelid: 0xa010164 encap: VXLAN
+ 
+172.16.66.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.66.1, Vlan66, [0/0], 23:40:42, direct
+172.16.66.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.66.1, Vlan66, [0/0], 23:40:42, local
+172.16.66.2/32, ubest/mbest: 1/0, attached
+    *via 172.16.66.2, Vlan66, [190/0], 00:39:06, hmm
+172.17.67.0/24, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:37:28, bgp-65404, external, tag 65400, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+192.168.3.0/30, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:37:28, bgp-65404, external, tag 65400, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+192.168.3.4/30, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:37:28, bgp-65404, external, tag 65400, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+```
+
+</details>
+
+<details>
+
+<summary>SPINE1-1</summary>
+
+```
+SPINE1-1# show ip bgp summary
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 10.10.10.1, local AS number 65400
+BGP table version is 32, IPv4 Unicast config peers 5, capable peers 5
+26 network entries and 31 paths using 8072 bytes of memory
+BGP attribute entries [9/3240], BGP AS path entries [8/60]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.1.2        4 65401      28303      28304       32    0    0 23:35:02 3         
+12.12.12.6      4 65500      28309      28305       32    0    0 23:35:01 13        
+20.1.1.2        4 65402      28303      28304       32    0    0 23:35:03 3         
+30.1.1.2        4 65403      28298      28299       32    0    0 23:34:47 3         
+40.1.1.2        4 65404      28299      28300       32    0    0 23:34:53 3         
+SPINE1-1# show ip route
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+1.1.1.1/32, ubest/mbest: 1/0
+    *via 10.1.1.2, [20/0], 23:35:40, bgp-65400, external, tag 65401
+1.1.1.2/32, ubest/mbest: 1/0
+    *via 20.1.1.2, [20/0], 23:35:40, bgp-65400, external, tag 65402
+1.1.1.3/32, ubest/mbest: 1/0
+    *via 30.1.1.2, [20/0], 23:35:34, bgp-65400, external, tag 65403
+1.1.1.4/32, ubest/mbest: 1/0
+    *via 40.1.1.2, [20/0], 23:35:40, bgp-65400, external, tag 65404
+1.2.1.1/32, ubest/mbest: 1/0
+    *via 12.12.12.6, [20/0], 23:32:40, bgp-65400, external, tag 65500
+1.2.1.2/32, ubest/mbest: 1/0
+    *via 12.12.12.6, [20/0], 23:32:40, bgp-65400, external, tag 65500
+1.2.1.3/32, ubest/mbest: 1/0
+    *via 12.12.12.6, [20/0], 23:35:20, bgp-65400, external, tag 65500
+10.1.1.0/30, ubest/mbest: 1/0, attached
+    *via 10.1.1.1, Eth1/1, [0/0], 23:36:00, direct
+10.1.1.1/32, ubest/mbest: 1/0, attached
+    *via 10.1.1.1, Eth1/1, [0/0], 23:36:00, local
+10.1.1.100/32, ubest/mbest: 1/0
+    *via 12.12.12.6, [20/0], 23:32:40, bgp-65400, external, tag 65500
+10.1.2.0/30, ubest/mbest: 1/0
+    *via 10.1.1.2, [20/0], 23:35:40, bgp-65400, external, tag 65401
+10.2.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.6, [20/0], 23:35:19, bgp-65400, external, tag 65500
+10.2.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.6, [20/0], 23:35:20, bgp-65400, external, tag 65500
+10.10.10.1/32, ubest/mbest: 2/0, attached
+    *via 10.10.10.1, Lo10, [0/0], 23:37:42, local
+    *via 10.10.10.1, Lo10, [0/0], 23:37:42, direct
+10.20.10.2/32, ubest/mbest: 1/0
+    *via 12.12.12.6, [20/0], 23:35:20, bgp-65400, external, tag 65500
+12.12.12.4/30, ubest/mbest: 1/0, attached
+    *via 12.12.12.5, Eth1/5, [0/0], 23:35:59, direct
+12.12.12.5/32, ubest/mbest: 1/0, attached
+    *via 12.12.12.5, Eth1/5, [0/0], 23:35:59, local
+20.1.1.0/30, ubest/mbest: 1/0, attached
+    *via 20.1.1.1, Eth1/2, [0/0], 23:36:00, direct
+20.1.1.1/32, ubest/mbest: 1/0, attached
+    *via 20.1.1.1, Eth1/2, [0/0], 23:36:00, local
+20.1.2.0/30, ubest/mbest: 1/0
+    *via 20.1.1.2, [20/0], 23:35:40, bgp-65400, external, tag 65402
+20.2.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.6, [20/0], 23:35:11, bgp-65400, external, tag 65500
+20.2.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.6, [20/0], 23:35:20, bgp-65400, external, tag 65500
+30.1.1.0/30, ubest/mbest: 1/0, attached
+    *via 30.1.1.1, Eth1/3, [0/0], 23:36:00, direct
+30.1.1.1/32, ubest/mbest: 1/0, attached
+    *via 30.1.1.1, Eth1/3, [0/0], 23:36:00, local
+30.1.2.0/30, ubest/mbest: 1/0
+    *via 30.1.1.2, [20/0], 23:35:34, bgp-65400, external, tag 65403
+30.2.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.6, [20/0], 23:35:20, bgp-65400, external, tag 65500
+30.2.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.6, [20/0], 23:35:20, bgp-65400, external, tag 65500
+40.1.1.0/30, ubest/mbest: 1/0, attached
+    *via 40.1.1.1, Eth1/4, [0/0], 23:36:00, direct
+40.1.1.1/32, ubest/mbest: 1/0, attached
+    *via 40.1.1.1, Eth1/4, [0/0], 23:36:00, local
+40.1.2.0/30, ubest/mbest: 1/0
+    *via 40.1.1.2, [20/0], 23:35:40, bgp-65400, external, tag 65404
+192.168.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.6, [20/0], 23:35:19, bgp-65400, external, tag 65500
+```
+
+</details>
+
+<details>
+
+<summary>SPINE1-2</summary>
+
+```
+SPINE1-2# show ip bgp summary
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 10.10.10.2, local AS number 65400
+BGP table version is 32, IPv4 Unicast config peers 5, capable peers 5
+26 network entries and 31 paths using 8072 bytes of memory
+BGP attribute entries [9/3240], BGP AS path entries [8/60]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.2.2        4 65401      28302      28305       32    0    0 23:35:00 3         
+12.12.12.2      4 65500      28310      28305       32    0    0 23:35:00 13        
+20.1.2.2        4 65402      28302      28303       32    0    0 23:35:00 3         
+30.1.2.2        4 65403      28299      28300       32    0    0 23:34:51 3         
+40.1.2.2        4 65404      28300      28301       32    0    0 23:34:55 3         
+SPINE1-2# show ip route
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+1.1.1.1/32, ubest/mbest: 1/0
+    *via 10.1.2.2, [20/0], 23:35:45, bgp-65400, external, tag 65401
+1.1.1.2/32, ubest/mbest: 1/0
+    *via 20.1.2.2, [20/0], 23:35:45, bgp-65400, external, tag 65402
+1.1.1.3/32, ubest/mbest: 1/0
+    *via 30.1.2.2, [20/0], 23:35:36, bgp-65400, external, tag 65403
+1.1.1.4/32, ubest/mbest: 1/0
+    *via 40.1.2.2, [20/0], 23:35:44, bgp-65400, external, tag 65404
+1.2.1.1/32, ubest/mbest: 1/0
+    *via 12.12.12.2, [20/0], 23:32:44, bgp-65400, external, tag 65500
+1.2.1.2/32, ubest/mbest: 1/0
+    *via 12.12.12.2, [20/0], 23:32:44, bgp-65400, external, tag 65500
+1.2.1.3/32, ubest/mbest: 1/0
+    *via 12.12.12.2, [20/0], 23:35:21, bgp-65400, external, tag 65500
+10.1.1.0/30, ubest/mbest: 1/0
+    *via 10.1.2.2, [20/0], 23:35:45, bgp-65400, external, tag 65401
+10.1.1.100/32, ubest/mbest: 1/0
+    *via 12.12.12.2, [20/0], 23:32:44, bgp-65400, external, tag 65500
+10.1.2.0/30, ubest/mbest: 1/0, attached
+    *via 10.1.2.1, Eth1/1, [0/0], 23:35:56, direct
+10.1.2.1/32, ubest/mbest: 1/0, attached
+    *via 10.1.2.1, Eth1/1, [0/0], 23:35:56, local
+10.2.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.2, [20/0], 23:35:21, bgp-65400, external, tag 65500
+10.2.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.2, [20/0], 23:35:21, bgp-65400, external, tag 65500
+10.10.10.2/32, ubest/mbest: 2/0, attached
+    *via 10.10.10.2, Lo10, [0/0], 23:37:38, local
+    *via 10.10.10.2, Lo10, [0/0], 23:37:38, direct
+10.20.10.1/32, ubest/mbest: 1/0
+    *via 12.12.12.2, [20/0], 23:35:21, bgp-65400, external, tag 65500
+12.12.12.0/30, ubest/mbest: 1/0, attached
+    *via 12.12.12.1, Eth1/5, [0/0], 23:35:54, direct
+12.12.12.1/32, ubest/mbest: 1/0, attached
+    *via 12.12.12.1, Eth1/5, [0/0], 23:35:54, local
+20.1.1.0/30, ubest/mbest: 1/0
+    *via 20.1.2.2, [20/0], 23:35:45, bgp-65400, external, tag 65402
+20.1.2.0/30, ubest/mbest: 1/0, attached
+    *via 20.1.2.1, Eth1/2, [0/0], 23:35:55, direct
+20.1.2.1/32, ubest/mbest: 1/0, attached
+    *via 20.1.2.1, Eth1/2, [0/0], 23:35:55, local
+20.2.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.2, [20/0], 23:35:21, bgp-65400, external, tag 65500
+20.2.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.2, [20/0], 23:35:15, bgp-65400, external, tag 65500
+30.1.1.0/30, ubest/mbest: 1/0
+    *via 30.1.2.2, [20/0], 23:35:36, bgp-65400, external, tag 65403
+30.1.2.0/30, ubest/mbest: 1/0, attached
+    *via 30.1.2.1, Eth1/3, [0/0], 23:35:55, direct
+30.1.2.1/32, ubest/mbest: 1/0, attached
+    *via 30.1.2.1, Eth1/3, [0/0], 23:35:55, local
+30.2.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.2, [20/0], 23:35:21, bgp-65400, external, tag 65500
+30.2.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.2, [20/0], 23:35:21, bgp-65400, external, tag 65500
+40.1.1.0/30, ubest/mbest: 1/0
+    *via 40.1.2.2, [20/0], 23:35:44, bgp-65400, external, tag 65404
+40.1.2.0/30, ubest/mbest: 1/0, attached
+    *via 40.1.2.1, Eth1/4, [0/0], 23:35:55, direct
+40.1.2.1/32, ubest/mbest: 1/0, attached
+    *via 40.1.2.1, Eth1/4, [0/0], 23:35:55, local
+192.168.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.2, [20/0], 23:35:21, bgp-65400, external, tag 65500
+```
+
+</details>
+
+<details>
+
+<summary>LEAF2-1</summary>
+
+```
+LEAF2-1(config-if)# show ip bgp summary
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 1.2.1.1, local AS number 65501
+BGP table version is 76, IPv4 Unicast config peers 3, capable peers 3
+29 network entries and 77 paths using 13076 bytes of memory
+BGP attribute entries [17/6120], BGP AS path entries [16/208]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.2.1.1        4 65500      28302      28293       76    0    0 23:34:28 23        
+10.2.2.1        4 65500      28302      28294       76    0    0 23:34:29 23        
+192.168.2.2     4 65502      28298      28291       76    0    0 23:34:17 26        
+LEAF2-1(config-if)# show ip route
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+1.1.1.1/32, ubest/mbest: 2/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+1.1.1.2/32, ubest/mbest: 2/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+1.1.1.3/32, ubest/mbest: 2/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+1.1.1.4/32, ubest/mbest: 2/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+1.2.1.1/32, ubest/mbest: 2/0, attached
+    *via 1.2.1.1, Lo1, [0/0], 23:32:31, local
+    *via 1.2.1.1, Lo1, [0/0], 23:32:31, direct
+1.2.1.2/32, ubest/mbest: 1/0
+    *via 192.168.2.2, [20/0], 23:32:31, bgp-65501, external, tag 65502
+1.2.1.3/32, ubest/mbest: 2/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+10.1.1.0/30, ubest/mbest: 1/0
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+10.1.1.100/32, ubest/mbest: 2/0, attached
+    *via 10.1.1.100, Lo1, [0/0], 23:32:31, local
+    *via 10.1.1.100, Lo1, [0/0], 23:32:31, direct
+10.1.2.0/30, ubest/mbest: 1/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+10.2.1.0/30, ubest/mbest: 1/0, attached
+    *via 10.2.1.2, Eth1/1, [0/0], 23:35:43, direct
+10.2.1.2/32, ubest/mbest: 1/0, attached
+    *via 10.2.1.2, Eth1/1, [0/0], 23:35:43, local
+10.2.2.0/30, ubest/mbest: 1/0, attached
+    *via 10.2.2.2, Eth1/2, [0/0], 23:35:43, direct
+10.2.2.2/32, ubest/mbest: 1/0, attached
+    *via 10.2.2.2, Eth1/2, [0/0], 23:35:43, local
+10.10.10.1/32, ubest/mbest: 1/0
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+10.10.10.2/32, ubest/mbest: 1/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+10.20.10.1/32, ubest/mbest: 1/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+10.20.10.2/32, ubest/mbest: 1/0
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+12.12.12.0/30, ubest/mbest: 1/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+12.12.12.4/30, ubest/mbest: 1/0
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+20.1.1.0/30, ubest/mbest: 1/0
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+20.1.2.0/30, ubest/mbest: 1/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+20.2.1.0/30, ubest/mbest: 1/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+20.2.2.0/30, ubest/mbest: 1/0
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+30.1.1.0/30, ubest/mbest: 1/0
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+30.1.2.0/30, ubest/mbest: 1/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+30.2.1.0/30, ubest/mbest: 1/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+30.2.2.0/30, ubest/mbest: 1/0
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+40.1.1.0/30, ubest/mbest: 1/0
+    *via 10.2.2.1, [20/0], 23:35:10, bgp-65501, external, tag 65500
+40.1.2.0/30, ubest/mbest: 1/0
+    *via 10.2.1.1, [20/0], 23:35:08, bgp-65501, external, tag 65500
+192.168.2.0/30, ubest/mbest: 1/0, attached
+    *via 192.168.2.1, Vlan2, [0/0], 23:35:29, direct
+192.168.2.1/32, ubest/mbest: 1/0, attached
+    *via 192.168.2.1, Vlan2, [0/0], 23:35:29, local
+
+LEAF2-1(config-if)#  show ip route vrf COD
+IP Route Table for VRF "COD"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+4.4.4.4/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:35:55, bgp-65501, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.16.65.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.65.1, Vlan65, [0/0], 23:38:55, direct
+172.16.65.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.65.1, Vlan65, [0/0], 23:38:55, local
+172.16.65.2/32, ubest/mbest: 1/0
+    *via 1.1.1.3%default, [20/0], 00:49:44, bgp-65501, external, tag 65500, segid: 100500 tunnelid: 0x1010103 encap: VXLAN
+ 
+172.16.65.3/32, ubest/mbest: 1/0, attached
+    *via 172.16.65.3, Vlan65, [190/0], 00:08:25, hmm
+172.16.66.2/32, ubest/mbest: 1/0
+    *via 1.1.1.4%default, [20/0], 23:25:18, bgp-65501, external, tag 65500, segid: 100500 tunnelid: 0x1010104 encap: VXLAN
+ 
+172.17.67.0/24, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:35:55, bgp-65501, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.17.67.2/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:26:13, bgp-65501, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.17.67.3/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:25:53, bgp-65501, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.17.67.4/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:25:47, bgp-65501, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+192.168.3.0/30, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:35:55, bgp-65501, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+192.168.3.4/30, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:35:55, bgp-65501, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+```
+
+</details>
+
+<details>
+
+<summary>LEAF2-2</summary>
+
+```
+LEAF2-2(config-if)# show ip bgp summary
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 1.2.1.2, local AS number 65502
+BGP table version is 78, IPv4 Unicast config peers 3, capable peers 3
+29 network entries and 79 paths using 13268 bytes of memory
+BGP attribute entries [17/6120], BGP AS path entries [16/208]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+20.2.1.1        4 65500      28298      28288       78    0    0 23:34:18 23        
+20.2.2.1        4 65500      28299      28289       78    0    0 23:34:21 23        
+192.168.2.1     4 65501      28302      28286       78    0    0 23:34:19 28        
+LEAF2-2(config-if)# show ip route
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+1.1.1.1/32, ubest/mbest: 2/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+1.1.1.2/32, ubest/mbest: 2/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+1.1.1.3/32, ubest/mbest: 2/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+1.1.1.4/32, ubest/mbest: 2/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+1.2.1.1/32, ubest/mbest: 1/0
+    *via 192.168.2.1, [20/0], 23:32:34, bgp-65502, external, tag 65501
+1.2.1.2/32, ubest/mbest: 2/0, attached
+    *via 1.2.1.2, Lo2, [0/0], 23:32:34, local
+    *via 1.2.1.2, Lo2, [0/0], 23:32:34, direct
+1.2.1.3/32, ubest/mbest: 2/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+10.1.1.0/30, ubest/mbest: 1/0
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+10.1.1.100/32, ubest/mbest: 2/0, attached
+    *via 10.1.1.100, Lo2, [0/0], 23:32:34, local
+    *via 10.1.1.100, Lo2, [0/0], 23:32:34, direct
+10.1.2.0/30, ubest/mbest: 1/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+10.2.1.0/30, ubest/mbest: 1/0
+    *via 192.168.2.1, [20/0], 23:35:08, bgp-65502, external, tag 65501
+10.2.2.0/30, ubest/mbest: 1/0
+    *via 192.168.2.1, [20/0], 23:35:08, bgp-65502, external, tag 65501
+10.10.10.1/32, ubest/mbest: 1/0
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+10.10.10.2/32, ubest/mbest: 1/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+10.20.10.1/32, ubest/mbest: 1/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+10.20.10.2/32, ubest/mbest: 1/0
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+12.12.12.0/30, ubest/mbest: 1/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+12.12.12.4/30, ubest/mbest: 1/0
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+20.1.1.0/30, ubest/mbest: 1/0
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+20.1.2.0/30, ubest/mbest: 1/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+20.2.1.0/30, ubest/mbest: 1/0, attached
+    *via 20.2.1.2, Eth1/1, [0/0], 23:35:43, direct
+20.2.1.2/32, ubest/mbest: 1/0, attached
+    *via 20.2.1.2, Eth1/1, [0/0], 23:35:43, local
+20.2.2.0/30, ubest/mbest: 1/0, attached
+    *via 20.2.2.2, Eth1/2, [0/0], 23:35:43, direct
+20.2.2.2/32, ubest/mbest: 1/0, attached
+    *via 20.2.2.2, Eth1/2, [0/0], 23:35:43, local
+30.1.1.0/30, ubest/mbest: 1/0
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+30.1.2.0/30, ubest/mbest: 1/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+30.2.1.0/30, ubest/mbest: 1/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+30.2.2.0/30, ubest/mbest: 1/0
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+40.1.1.0/30, ubest/mbest: 1/0
+    *via 20.2.2.1, [20/0], 23:35:03, bgp-65502, external, tag 65500
+40.1.2.0/30, ubest/mbest: 1/0
+    *via 20.2.1.1, [20/0], 23:35:06, bgp-65502, external, tag 65500
+192.168.2.0/30, ubest/mbest: 1/0, attached
+    *via 192.168.2.2, Vlan2, [0/0], 23:35:33, direct
+192.168.2.2/32, ubest/mbest: 1/0, attached
+    *via 192.168.2.2, Vlan2, [0/0], 23:35:33, local
+
+LEAF2-2(config-if)#  show ip route vrf COD
+IP Route Table for VRF "COD"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+4.4.4.4/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:35:59, bgp-65502, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.16.65.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.65.1, Vlan65, [0/0], 23:38:59, direct
+172.16.65.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.65.1, Vlan65, [0/0], 23:38:59, local
+172.16.65.2/32, ubest/mbest: 1/0
+    *via 1.1.1.3%default, [20/0], 00:49:48, bgp-65502, external, tag 65500, segid: 100500 tunnelid: 0x1010103 encap: VXLAN
+ 
+172.16.65.3/32, ubest/mbest: 1/0, attached
+    *via 172.16.65.3, Vlan65, [190/0], 00:08:29, hmm
+172.16.66.2/32, ubest/mbest: 1/0
+    *via 1.1.1.4%default, [20/0], 23:25:22, bgp-65502, external, tag 65500, segid: 100500 tunnelid: 0x1010104 encap: VXLAN
+ 
+172.17.67.0/24, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:35:59, bgp-65502, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.17.67.2/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:26:17, bgp-65502, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.17.67.3/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:25:57, bgp-65502, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+172.17.67.4/32, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:25:51, bgp-65502, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+192.168.3.0/30, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:35:59, bgp-65502, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+ 
+192.168.3.4/30, ubest/mbest: 1/0
+    *via 1.2.1.3%default, [20/0], 23:35:59, bgp-65502, external, tag 65500, segid: 100500 tunnelid: 0x1020103 encap: VXLAN
+```
+
+</details>
+
+<details>
+
+<summary>LEAF2-3</summary>
+
+```
+LEAF2-3(config-if)# show ip bgp summary
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 1.2.1.3, local AS number 65503
+BGP table version is 49, IPv4 Unicast config peers 2, capable peers 2
+29 network entries and 51 paths using 10580 bytes of memory
+BGP attribute entries [9/3240], BGP AS path entries [8/92]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+30.2.1.1        4 65500      28312      28300       49    0    0 23:34:56 24        
+30.2.2.1        4 65500      28311      28300       49    0    0 23:34:56 24        
+LEAF2-3(config-if)# show ip route
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+1.1.1.1/32, ubest/mbest: 2/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+1.1.1.2/32, ubest/mbest: 2/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+1.1.1.3/32, ubest/mbest: 2/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+1.1.1.4/32, ubest/mbest: 2/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+1.2.1.1/32, ubest/mbest: 2/0
+    *via 30.2.1.1, [20/0], 23:32:37, bgp-65503, external, tag 65500
+    *via 30.2.2.1, [20/0], 23:32:37, bgp-65503, external, tag 65500
+1.2.1.2/32, ubest/mbest: 2/0
+    *via 30.2.1.1, [20/0], 23:32:37, bgp-65503, external, tag 65500
+    *via 30.2.2.1, [20/0], 23:32:37, bgp-65503, external, tag 65500
+1.2.1.3/32, ubest/mbest: 2/0, attached
+    *via 1.2.1.3, Lo3, [0/0], 23:37:29, local
+    *via 1.2.1.3, Lo3, [0/0], 23:37:29, direct
+10.1.1.0/30, ubest/mbest: 1/0
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+10.1.1.100/32, ubest/mbest: 2/0
+    *via 30.2.1.1, [20/0], 23:32:37, bgp-65503, external, tag 65500
+    *via 30.2.2.1, [20/0], 23:32:37, bgp-65503, external, tag 65500
+10.1.2.0/30, ubest/mbest: 1/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+10.2.1.0/30, ubest/mbest: 1/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+10.2.2.0/30, ubest/mbest: 1/0
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+10.10.10.1/32, ubest/mbest: 1/0
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+10.10.10.2/32, ubest/mbest: 1/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+10.20.10.1/32, ubest/mbest: 1/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+10.20.10.2/32, ubest/mbest: 1/0
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+12.12.12.0/30, ubest/mbest: 1/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+12.12.12.4/30, ubest/mbest: 1/0
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+20.1.1.0/30, ubest/mbest: 1/0
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+20.1.2.0/30, ubest/mbest: 1/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+20.2.1.0/30, ubest/mbest: 1/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+20.2.2.0/30, ubest/mbest: 1/0
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+30.1.1.0/30, ubest/mbest: 1/0
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+30.1.2.0/30, ubest/mbest: 1/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+30.2.1.0/30, ubest/mbest: 1/0, attached
+    *via 30.2.1.2, Eth1/1, [0/0], 23:35:50, direct
+30.2.1.2/32, ubest/mbest: 1/0, attached
+    *via 30.2.1.2, Eth1/1, [0/0], 23:35:50, local
+30.2.2.0/30, ubest/mbest: 1/0, attached
+    *via 30.2.2.2, Eth1/2, [0/0], 23:35:50, direct
+30.2.2.2/32, ubest/mbest: 1/0, attached
+    *via 30.2.2.2, Eth1/2, [0/0], 23:35:50, local
+40.1.1.0/30, ubest/mbest: 1/0
+    *via 30.2.2.1, [20/0], 23:35:17, bgp-65503, external, tag 65500
+40.1.2.0/30, ubest/mbest: 1/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+192.168.2.0/30, ubest/mbest: 2/0
+    *via 30.2.1.1, [20/0], 23:35:14, bgp-65503, external, tag 65500
+    *via 30.2.2.1, [20/0], 23:35:16, bgp-65503, external, tag 65500
+
+LEAF2-3(config-if)# show ip route vrf TENANT_1
+IP Route Table for VRF "TENANT_1"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+4.4.4.4/32, ubest/mbest: 1/0
+    *via 192.168.3.6, [20/0], 23:37:57, bgp-65503, external, tag 65600
+172.16.65.2/32, ubest/mbest: 1/0
+    *via 192.168.3.6, [20/0], 00:49:08, bgp-65503, external, tag 65600
+172.16.65.3/32, ubest/mbest: 1/0
+    *via 192.168.3.6, [20/0], 00:49:58, bgp-65503, external, tag 65600
+172.16.66.2/32, ubest/mbest: 1/0
+    *via 192.168.3.6, [20/0], 23:24:42, bgp-65503, external, tag 65600
+172.17.67.0/24, ubest/mbest: 1/0, attached
+    *via 172.17.67.1, Vlan67, [0/0], 23:40:23, direct
+172.17.67.1/32, ubest/mbest: 1/0, attached
+    *via 172.17.67.1, Vlan67, [0/0], 23:40:23, local
+172.17.67.2/32, ubest/mbest: 1/0
+    *via 1.1.1.1%default, [20/0], 23:25:37, bgp-65503, external, tag 65500, segid: 100501 tunnelid: 0x1010101 encap: VXLAN
+ 
+172.17.67.3/32, ubest/mbest: 1/0
+    *via 1.1.1.1%default, [20/0], 23:25:17, bgp-65503, external, tag 65500, segid: 100501 tunnelid: 0x1010101 encap: VXLAN
+ 
+172.17.67.4/32, ubest/mbest: 1/0
+    *via 1.1.1.2%default, [20/0], 23:25:12, bgp-65503, external, tag 65500, segid: 100501 tunnelid: 0x1010102 encap: VXLAN
+ 
+172.17.67.5/32, ubest/mbest: 1/0, attached
+    *via 172.17.67.5, Vlan67, [190/0], 00:38:51, hmm
+172.17.67.6/32, ubest/mbest: 1/0, attached
+    *via 172.17.67.6, Vlan67, [190/0], 00:38:51, hmm
+192.168.3.0/30, ubest/mbest: 1/0
+    *via 192.168.3.6, [20/0], 23:37:57, bgp-65503, external, tag 65600
+192.168.3.4/30, ubest/mbest: 1/0, attached
+    *via 192.168.3.5, Eth1/6, [0/0], 23:38:43, direct
+192.168.3.5/32, ubest/mbest: 1/0, attached
+    *via 192.168.3.5, Eth1/6, [0/0], 23:38:43, local
+```
+
+</details>
+
+<details>
+
+<summary>SPINE2-1</summary>
+
+```
+SPINE2-1# show ip bgp summary
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 10.20.10.1, local AS number 65500
+BGP table version is 36, IPv4 Unicast config peers 4, capable peers 4
+26 network entries and 36 paths using 8552 bytes of memory
+BGP attribute entries [11/3960], BGP AS path entries [10/84]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.2.1.2        4 65501      28302      28300       36    0    0 23:34:44 6         
+12.12.12.1      4 65400      28311      28305       36    0    0 23:35:05 14        
+20.2.1.2        4 65502      28305      28295       36    0    0 23:34:32 8         
+30.2.1.2        4 65503      28304      28305       36    0    0 23:35:07 3         
+SPINE2-1# show ip route
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+1.1.1.1/32, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+1.1.1.2/32, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+1.1.1.3/32, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+1.1.1.4/32, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+1.2.1.1/32, ubest/mbest: 1/0
+    *via 10.2.1.2, [20/0], 23:32:47, bgp-65500, external, tag 65501
+1.2.1.2/32, ubest/mbest: 1/0
+    *via 20.2.1.2, [20/0], 23:32:47, bgp-65500, external, tag 65502
+1.2.1.3/32, ubest/mbest: 1/0
+    *via 30.2.1.2, [20/0], 23:35:24, bgp-65500, external, tag 65503
+10.1.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+10.1.1.100/32, ubest/mbest: 1/0
+    *via 20.2.1.2, [20/0], 23:32:47, bgp-65500, external, tag 65502
+10.1.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+10.2.1.0/30, ubest/mbest: 1/0, attached
+    *via 10.2.1.1, Eth1/1, [0/0], 23:36:04, direct
+10.2.1.1/32, ubest/mbest: 1/0, attached
+    *via 10.2.1.1, Eth1/1, [0/0], 23:36:04, local
+10.2.2.0/30, ubest/mbest: 1/0
+    *via 10.2.1.2, [20/0], 23:35:24, bgp-65500, external, tag 65501
+10.10.10.2/32, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+10.20.10.1/32, ubest/mbest: 2/0, attached
+    *via 10.20.10.1, Lo10, [0/0], 23:37:42, local
+    *via 10.20.10.1, Lo10, [0/0], 23:37:42, direct
+12.12.12.0/30, ubest/mbest: 1/0, attached
+    *via 12.12.12.2, Eth1/4, [0/0], 23:36:03, direct
+12.12.12.2/32, ubest/mbest: 1/0, attached
+    *via 12.12.12.2, Eth1/4, [0/0], 23:36:03, local
+20.1.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+20.1.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+20.2.1.0/30, ubest/mbest: 1/0, attached
+    *via 20.2.1.1, Eth1/2, [0/0], 23:36:04, direct
+20.2.1.1/32, ubest/mbest: 1/0, attached
+    *via 20.2.1.1, Eth1/2, [0/0], 23:36:04, local
+20.2.2.0/30, ubest/mbest: 1/0
+    *via 20.2.1.2, [20/0], 23:35:18, bgp-65500, external, tag 65502
+30.1.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+30.1.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+30.2.1.0/30, ubest/mbest: 1/0, attached
+    *via 30.2.1.1, Eth1/3, [0/0], 23:36:04, direct
+30.2.1.1/32, ubest/mbest: 1/0, attached
+    *via 30.2.1.1, Eth1/3, [0/0], 23:36:04, local
+30.2.2.0/30, ubest/mbest: 1/0
+    *via 30.2.1.2, [20/0], 23:35:24, bgp-65500, external, tag 65503
+40.1.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+40.1.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.1, [20/0], 23:35:24, bgp-65500, external, tag 65400
+192.168.2.0/30, ubest/mbest: 1/0
+    *via 10.2.1.2, [20/0], 23:35:24, bgp-65500, external, tag 65501
+```
+
+</details>
+
+<details>
+
+<summary>SPINE2-2</summary>
+
+```
+SPINE2-2# show ip bgp summary
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 10.20.10.2, local AS number 65500
+BGP table version is 37, IPv4 Unicast config peers 4, capable peers 4
+26 network entries and 36 paths using 8552 bytes of memory
+BGP attribute entries [11/3960], BGP AS path entries [10/84]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.2.2.2        4 65501      28305      28302       37    0    0 23:34:49 6         
+12.12.12.5      4 65400      28314      28307       37    0    0 23:35:12 14        
+20.2.2.2        4 65502      28308      28298       37    0    0 23:34:39 8         
+30.2.2.2        4 65503      28306      28306       37    0    0 23:35:11 3         
+SPINE2-2# show ip route
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+1.1.1.1/32, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+1.1.1.2/32, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+1.1.1.3/32, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+1.1.1.4/32, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+1.2.1.1/32, ubest/mbest: 1/0
+    *via 10.2.2.2, [20/0], 23:32:51, bgp-65500, external, tag 65501
+1.2.1.2/32, ubest/mbest: 1/0
+    *via 20.2.2.2, [20/0], 23:32:51, bgp-65500, external, tag 65502
+1.2.1.3/32, ubest/mbest: 1/0
+    *via 30.2.2.2, [20/0], 23:35:31, bgp-65500, external, tag 65503
+10.1.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+10.1.1.100/32, ubest/mbest: 1/0
+    *via 20.2.2.2, [20/0], 23:32:51, bgp-65500, external, tag 65502
+10.1.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+10.2.1.0/30, ubest/mbest: 1/0
+    *via 10.2.2.2, [20/0], 23:35:30, bgp-65500, external, tag 65501
+10.2.2.0/30, ubest/mbest: 1/0, attached
+    *via 10.2.2.1, Eth1/1, [0/0], 23:36:08, direct
+10.2.2.1/32, ubest/mbest: 1/0, attached
+    *via 10.2.2.1, Eth1/1, [0/0], 23:36:08, local
+10.10.10.1/32, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+10.20.10.2/32, ubest/mbest: 2/0, attached
+    *via 10.20.10.2, Lo20, [0/0], 23:37:48, local
+    *via 10.20.10.2, Lo20, [0/0], 23:37:48, direct
+12.12.12.4/30, ubest/mbest: 1/0, attached
+    *via 12.12.12.6, Eth1/4, [0/0], 23:36:08, direct
+12.12.12.6/32, ubest/mbest: 1/0, attached
+    *via 12.12.12.6, Eth1/4, [0/0], 23:36:08, local
+20.1.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+20.1.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+20.2.1.0/30, ubest/mbest: 1/0
+    *via 20.2.2.2, [20/0], 23:35:22, bgp-65500, external, tag 65502
+20.2.2.0/30, ubest/mbest: 1/0, attached
+    *via 20.2.2.1, Eth1/2, [0/0], 23:36:08, direct
+20.2.2.1/32, ubest/mbest: 1/0, attached
+    *via 20.2.2.1, Eth1/2, [0/0], 23:36:08, local
+30.1.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+30.1.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+30.2.1.0/30, ubest/mbest: 1/0
+    *via 30.2.2.2, [20/0], 23:35:31, bgp-65500, external, tag 65503
+30.2.2.0/30, ubest/mbest: 1/0, attached
+    *via 30.2.2.1, Eth1/3, [0/0], 23:36:08, direct
+30.2.2.1/32, ubest/mbest: 1/0, attached
+    *via 30.2.2.1, Eth1/3, [0/0], 23:36:08, local
+40.1.1.0/30, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+40.1.2.0/30, ubest/mbest: 1/0
+    *via 12.12.12.5, [20/0], 23:35:31, bgp-65500, external, tag 65400
+192.168.2.0/30, ubest/mbest: 1/0
+    *via 10.2.2.2, [20/0], 23:35:30, bgp-65500, external, tag 65501
+```
+
+</details>
+
+<details>
+
+<summary>EDGE</summary>
+
+```
+EDGE# show ip route 
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+4.4.4.4/32, ubest/mbest: 2/0, attached
+    *via 4.4.4.4, Lo1, [0/0], 23:49:10, local
+    *via 4.4.4.4, Lo1, [0/0], 23:49:10, direct
+172.16.65.2/32, ubest/mbest: 1/0
+    *via 192.168.3.1, [20/0], 00:57:59, bgp-65600, external, tag 65503
+172.16.65.3/32, ubest/mbest: 1/0
+    *via 192.168.3.1, [20/0], 00:58:49, bgp-65600, external, tag 65503
+172.16.66.2/32, ubest/mbest: 1/0
+    *via 192.168.3.1, [20/0], 23:33:34, bgp-65600, external, tag 65503
+172.17.67.0/24, ubest/mbest: 1/0
+    *via 192.168.3.5, [20/0], 23:46:48, bgp-65600, external, tag 65503
+172.17.67.2/32, ubest/mbest: 1/0
+    *via 192.168.3.5, [20/0], 23:34:28, bgp-65600, external, tag 65503
+172.17.67.3/32, ubest/mbest: 1/0
+    *via 192.168.3.5, [20/0], 23:34:08, bgp-65600, external, tag 65503
+172.17.67.4/32, ubest/mbest: 1/0
+    *via 192.168.3.5, [20/0], 23:34:03, bgp-65600, external, tag 65503
+192.168.3.0/30, ubest/mbest: 1/0, attached
+    *via 192.168.3.2, Eth1/1, [0/0], 23:47:29, direct
+192.168.3.2/32, ubest/mbest: 1/0, attached
+    *via 192.168.3.2, Eth1/1, [0/0], 23:47:29, local
+192.168.3.4/30, ubest/mbest: 1/0, attached
+    *via 192.168.3.6, Eth1/2, [0/0], 23:47:29, direct
+192.168.3.6/32, ubest/mbest: 1/0, attached
+    *via 192.168.3.6, Eth1/2, [0/0], 23:47:29, local
+```
+
+</details>
+
+
+
+l2vpn evpn маршруты
+
+<details>
+
+<summary>LEAF1-1</summary>
+
+```
+```
+
+</details>
+
+
 
 
 
