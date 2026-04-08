@@ -113,10 +113,7 @@ feature lacp
 feature nv overlay
 
 fabric forwarding anycast-gateway-mac 0011.0011.0011
-vlan 1,25,67,501
-vlan 25
-  name VLAN_25
-  vn-segment 100025
+vlan 1,67,501
 vlan 67
   name VLAN_67
   vn-segment 100067
@@ -359,19 +356,13 @@ feature lacp
 feature nv overlay
 
 fabric forwarding anycast-gateway-mac 0011.0011.0011
-vlan 1,65,67,500-501
+vlan 1,65,500
 vlan 65
   name VLAN_65
   vn-segment 100065
-vlan 67
-  name VLAN_67
-  vn-segment 100067
 vlan 500
   name L3-VNI-COD
   vn-segment 100500
-vlan 501
-  name L3-VNI-TENANT_1
-  vn-segment 100501
 
 route-map DIRECT-ROUTES-MAP permit 10
 vrf context COD
@@ -382,14 +373,6 @@ vrf context COD
     route-target import 1:1
     route-target export 11:11 evpn
     route-target export 1:1
-vrf context TENANT_1
-  vni 100501
-  rd 65403:2
-  address-family ipv4 unicast
-    route-target import 22:22 evpn
-    route-target import 2:2
-    route-target export 22:22 evpn
-    route-target export 2:2
 	
 interface Vlan65
   no shutdown
@@ -397,13 +380,6 @@ interface Vlan65
   no ip redirects
   ip address 172.16.65.1/24
   no ipv6 redirects
-  fabric forwarding mode anycast-gateway
-
-interface Vlan67
-  no shutdown
-  vrf member TENANT_1
-  no ip redirects
-  ip address 172.17.67.1/24
   fabric forwarding mode anycast-gateway
 
 interface Vlan500
@@ -414,23 +390,13 @@ interface Vlan500
   ip forward
   no ipv6 redirects
 
-interface Vlan501
-  description L3-VNI-TENANT_1
-  no shutdown
-  vrf member TENANT_1
-  no ip redirects
-  ip forward
-
 interface nve1
   no shutdown
   host-reachability protocol bgp
   source-interface loopback1
   member vni 100065
     ingress-replication protocol bgp
-  member vni 100067
-    ingress-replication protocol bgp
   member vni 100500 associate-vrf
-  member vni 100501 associate-vrf
 
 interface Ethernet1/1
   description to_SPINE1
@@ -487,10 +453,6 @@ router bgp 65403
     address-family ipv4 unicast
 evpn
   vni 100065 l2
-    rd auto
-    route-target import auto
-    route-target export auto
-  vni 100067 l2
     rd auto
     route-target import auto
     route-target export auto
@@ -959,6 +921,7 @@ interface port-channel3
 interface nve1
   no shutdown
   host-reachability protocol bgp
+  advertise virtual-rmac
   source-interface loopback1
   member vni 100065
     ingress-replication protocol bgp
@@ -1012,7 +975,6 @@ router bgp 65501
     maximum-paths 2
   address-family l2vpn evpn
     maximum-paths 2
-    nexthop route-map UNCHANGED
     advertise-pip
   template peer OVERLAY
     remote-as 65500
@@ -1135,6 +1097,7 @@ interface port-channel3
 interface nve1
   no shutdown
   host-reachability protocol bgp
+  advertise virtual-rmac
   source-interface loopback2
   member vni 100065
     ingress-replication protocol bgp
@@ -1188,6 +1151,7 @@ router bgp 65502
     maximum-paths 2
   address-family l2vpn evpn
     maximum-paths 2
+    advertise-pip
   template peer OVERLAY
     remote-as 65500
     update-source loopback2
