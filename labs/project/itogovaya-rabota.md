@@ -1595,6 +1595,195 @@ router bgp 65600
 
 </details>
 
+<details>
+
+<summary>endhost-1</summary>
+
+```
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+56: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN qlen 1000
+    link/ether 02:42:ed:27:82:00 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.67.2/24 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:edff:fe27:8200/64 scope link 
+       valid_lft forever preferred_lft forever
+/ # ip route
+default via 172.17.67.1 dev eth0 
+172.17.67.0/24 dev eth0 scope link  src 172.17.67.2 
+```
+
+</details>
+
+<details>
+
+<summary>endhost-2</summary>
+
+```
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+60: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN qlen 1000
+    link/ether 02:42:00:c0:83:00 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.67.3/24 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:ff:fec0:8300/64 scope link 
+       valid_lft forever preferred_lft forever
+/ # ip route
+default via 172.17.67.1 dev eth0 
+172.17.67.0/24 dev eth0 scope link  src 172.17.67.3
+```
+
+</details>
+
+<details>
+
+<summary>endhost-3</summary>
+
+```
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+57: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN qlen 1000
+    link/ether 02:42:86:32:42:00 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.67.4/24 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:86ff:fe32:4200/64 scope link 
+       valid_lft forever preferred_lft forever
+/ # ip route
+default via 172.17.67.1 dev eth0 
+172.17.67.0/24 dev eth0 scope link  src 172.17.67.4
+```
+
+</details>
+
+<details>
+
+<summary>endhost-4</summary>
+
+```
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+58: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN qlen 1000
+    link/ether 02:42:b3:3e:be:00 brd ff:ff:ff:ff:ff:ff
+    inet 172.16.65.2/24 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:b3ff:fe3e:be00/64 scope link 
+       valid_lft forever preferred_lft forever
+/ # ip route
+default via 172.16.65.1 dev eth0 
+172.16.65.0/24 dev eth0 scope link  src 172.16.65.2 
+```
+
+</details>
+
+<details>
+
+<summary>endhost-5</summary>
+
+```
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+59: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN qlen 1000
+    link/ether 02:42:22:6f:26:00 brd ff:ff:ff:ff:ff:ff
+    inet 172.16.66.2/24 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:22ff:fe6f:2600/64 scope link 
+       valid_lft forever preferred_lft forever
+/ # ip route
+default via 172.16.66.1 dev eth0 
+172.16.66.0/24 dev eth0 scope link  src 172.16.66.2 
+```
+
+</details>
+
+<details>
+
+<summary>endhost-6</summary>
+
+```
+interface Vlan65
+ ip address 172.16.65.3 255.255.255.0
+end
+
+ip route 0.0.0.0 0.0.0.0 172.16.65.1
+```
+
+</details>
+
+<details>
+
+<summary>endhost-7</summary>
+
+```
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+55: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN qlen 1000
+    link/ether 02:42:ee:8b:bc:00 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.67.5/24 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:eeff:fe8b:bc00/64 scope link 
+       valid_lft forever preferred_lft forever
+/ # ip route
+default via 172.17.67.1 dev eth0 
+172.17.67.0/24 dev eth0 scope link  src 172.17.67.5 
+```
+
+</details>
+
+<details>
+
+<summary>endhost-8</summary>
+
+```
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+54: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN qlen 1000
+    link/ether 02:42:24:8c:3e:00 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.67.6/24 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:24ff:fe8c:3e00/64 scope link 
+       valid_lft forever preferred_lft forever
+/ # ip route
+default via 172.17.67.1 dev eth0 
+172.17.67.0/24 dev eth0 scope link  src 172.17.67.6 
+```
+
+</details>
+
 #### Проверка
 
 ipv4 маршруты
@@ -4492,25 +4681,774 @@ Route Distinguisher: 1.2.1.3:32834
 
 </details>
 
+VXLAN туннели
 
+<details>
 
+<summary>LEAF1-1</summary>
 
+```
+LEAF1-1# show nve peers
+Interface Peer-IP                                 State LearnType Uptime   Router-Mac       
+--------- --------------------------------------  ----- --------- -------- -----------------
+nve1      1.1.1.2                                 Up    CP        1d01h    0c63.0000.1b08   
+nve1      1.2.1.3                                 Up    CP        1d01h    0cde.0000.1b08  
 
-Проверка связности между endhost-1, находящимся в VRF COD, и endhost-2, endhost-3, находящимися в VRF TENANT\_1, а также Loopback интерфейсом на EDGE роутере
+LEAF1-1# show nve interface
+Interface: nve1, State: Up, encapsulation: VXLAN
+ VPC Capability: VPC-VIP-Only [not-notified]
+ Local Router MAC: 0c9a.0000.1b08
+ Host Learning Mode: Control-Plane
+ Source-Interface: loopback1 (primary: 1.1.1.1, secondary: 0.0.0.0)
 
+LEAF1-1# show interface nve 1
+nve1 is up
+admin state is up,  Hardware: NVE
+  MTU 9216 bytes
+  Encapsulation VXLAN
+  Auto-mdix is turned off
+  RX
+    ucast: 640 pkts, 58792 bytes - mcast: 38 pkts, 1756 bytes
+  TX
+    ucast: 1013 pkts, 139418 bytes - mcast: 0 pkts, 0 bytes
 
+LEAF1-1# show nve vni
+Codes: CP - Control Plane        DP - Data Plane          
+       UC - Unconfigured         SA - Suppress ARP        
+       S-ND - Suppress ND        
+       SU - Suppress Unknown Unicast 
+       Xconn - Crossconnect      
+       MS-IR - Multisite Ingress Replication 
+       HYB - Hybrid IRB mode
+    
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100067   UnicastBGP        Up    CP   L2 [67]                 
+nve1      100501   n/a               Up    CP   L3 [TENANT_1]           
+
+LEAF1-1# show nve vni ingress-replication 
+Interface VNI      Replication List  Source  Up Time      
+--------- -------- ----------------- ------- -------      
+
+nve1      100067   1.2.1.3           BGP-IMET 1d01h       
+                   1.1.1.2           BGP-IMET 1d01h  
+```
+
+</details>
+
+<details>
+
+<summary>LEAF1-2</summary>
+
+```
+LEAF1-2# show nve peers
+Interface Peer-IP                                 State LearnType Uptime   Router-Mac       
+--------- --------------------------------------  ----- --------- -------- -----------------
+nve1      1.1.1.1                                 Up    CP        1d01h    0c9a.0000.1b08   
+nve1      1.2.1.3                                 Up    CP        1d01h    0cde.0000.1b08 
+
+LEAF1-2# show nve interface
+Interface: nve1, State: Up, encapsulation: VXLAN
+ VPC Capability: VPC-VIP-Only [not-notified]
+ Local Router MAC: 0c63.0000.1b08
+ Host Learning Mode: Control-Plane
+ Source-Interface: loopback1 (primary: 1.1.1.2, secondary: 0.0.0.0)
+
+LEAF1-2# show interface nve 1
+nve1 is up
+admin state is up,  Hardware: NVE
+  MTU 9216 bytes
+  Encapsulation VXLAN
+  Auto-mdix is turned off
+  RX
+    ucast: 1515 pkts, 143934 bytes - mcast: 46 pkts, 2316 bytes
+  TX
+    ucast: 394 pkts, 52252 bytes - mcast: 0 pkts, 0 bytes
+
+LEAF1-2# show nve vni
+Codes: CP - Control Plane        DP - Data Plane          
+       UC - Unconfigured         SA - Suppress ARP        
+       S-ND - Suppress ND        
+       SU - Suppress Unknown Unicast 
+       Xconn - Crossconnect      
+       MS-IR - Multisite Ingress Replication 
+       HYB - Hybrid IRB mode
+    
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100067   UnicastBGP        Up    CP   L2 [67]                 
+nve1      100501   n/a               Up    CP   L3 [TENANT_1]           
+
+LEAF1-2# show nve vni ingress-replication
+Interface VNI      Replication List  Source  Up Time      
+--------- -------- ----------------- ------- -------      
+
+nve1      100067   1.2.1.3           BGP-IMET 1d01h       
+                   1.1.1.1           BGP-IMET 1d01h   
+```
+
+</details>
+
+<details>
+
+<summary>LEAF1-3</summary>
+
+```
+LEAF1-3# show nve peers
+Interface Peer-IP                                 State LearnType Uptime   Router-Mac       
+--------- --------------------------------------  ----- --------- -------- -----------------
+nve1      1.1.1.4                                 Up    CP        1d00h    0cec.0000.1b08   
+nve1      1.2.1.3                                 Up    CP        1d00h    0cde.0000.1b08   
+nve1      10.1.1.100                              Up    CP        00:22:33 0200.0a01.0164 
+
+LEAF1-3# show nve interface
+Interface: nve1, State: Up, encapsulation: VXLAN
+ VPC Capability: VPC-VIP-Only [not-notified]
+ Local Router MAC: 0c6e.0000.1b08
+ Host Learning Mode: Control-Plane
+ Source-Interface: loopback1 (primary: 1.1.1.3, secondary: 0.0.0.0)
+
+LEAF1-3# show interface nve 1
+nve1 is up
+admin state is up,  Hardware: NVE
+  MTU 9216 bytes
+  Encapsulation VXLAN
+  Auto-mdix is turned off
+  RX
+    ucast: 372 pkts, 33952 bytes - mcast: 0 pkts, 0 bytes
+  TX
+    ucast: 253 pkts, 36866 bytes - mcast: 0 pkts, 0 bytes
+
+LEAF1-3# show nve vni
+Codes: CP - Control Plane        DP - Data Plane          
+       UC - Unconfigured         SA - Suppress ARP        
+       S-ND - Suppress ND        
+       SU - Suppress Unknown Unicast 
+       Xconn - Crossconnect      
+       MS-IR - Multisite Ingress Replication 
+       HYB - Hybrid IRB mode
+    
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100065   UnicastBGP        Up    CP   L2 [65]                 
+nve1      100500   n/a               Up    CP   L3 [COD]                
+
+LEAF1-3# show nve vni ingress-replication
+Interface VNI      Replication List  Source  Up Time      
+--------- -------- ----------------- ------- -------      
+
+nve1      100065   10.1.1.100        BGP-IMET 00:29:43 
+```
+
+</details>
+
+<details>
+
+<summary>LEAF1-4</summary>
+
+```
+LEAF1-4# show nve peers
+Interface Peer-IP                                 State LearnType Uptime   Router-Mac       
+--------- --------------------------------------  ----- --------- -------- -----------------
+nve1      1.1.1.3                                 Up    CP        1d00h    0c6e.0000.1b08   
+nve1      1.2.1.3                                 Up    CP        1d00h    0cde.0000.1b08   
+nve1      10.1.1.100                              Up    CP        00:22:46 0200.0a01.0164 
+
+LEAF1-4# show nve interface
+Interface: nve1, State: Up, encapsulation: VXLAN
+ VPC Capability: VPC-VIP-Only [not-notified]
+ Local Router MAC: 0cec.0000.1b08
+ Host Learning Mode: Control-Plane
+ Source-Interface: loopback1 (primary: 1.1.1.4, secondary: 0.0.0.0)
+
+LEAF1-4# show interface nve 1
+nve1 is up
+admin state is up,  Hardware: NVE
+  MTU 9216 bytes
+  Encapsulation VXLAN
+  Auto-mdix is turned off
+  RX
+    ucast: 135 pkts, 11536 bytes - mcast: 0 pkts, 0 bytes
+  TX
+    ucast: 14 pkts, 2072 bytes - mcast: 0 pkts, 0 bytes
+
+LEAF1-4# show nve vni
+Codes: CP - Control Plane        DP - Data Plane          
+       UC - Unconfigured         SA - Suppress ARP        
+       S-ND - Suppress ND        
+       SU - Suppress Unknown Unicast 
+       Xconn - Crossconnect      
+       MS-IR - Multisite Ingress Replication 
+       HYB - Hybrid IRB mode
+    
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100066   UnicastBGP        Up    CP   L2 [66]                 
+nve1      100500   n/a               Up    CP   L3 [COD]                
+
+LEAF1-4# show nve vni ingress-replication
+Interface VNI      Replication List  Source  Up Time      
+--------- -------- ----------------- ------- -------      
+
+nve1      100066   
+```
+
+</details>
+
+<details>
+
+<summary>LEAF2-1</summary>
+
+```
+LEAF2-1# show nve peers
+Interface Peer-IP                                 State LearnType Uptime   Router-Mac       
+--------- --------------------------------------  ----- --------- -------- -----------------
+nve1      1.1.1.3                                 Up    CP        00:50:07 0c6e.0000.1b08   
+nve1      1.1.1.4                                 Up    CP        00:50:07 0cec.0000.1b08   
+nve1      1.2.1.3                                 Up    CP        00:50:12 0cde.0000.1b08 
+
+LEAF2-1# show nve interface
+Interface: nve1, State: Up, encapsulation: VXLAN
+ VPC Capability: VPC-VIP-Only [notified]
+ Local Router MAC: 0ce9.0000.1b08
+ Host Learning Mode: Control-Plane
+ Source-Interface: loopback1 (primary: 1.2.1.1, secondary: 10.1.1.100)
+
+LEAF2-1# show interface nve 1
+nve1 is up
+admin state is up,  Hardware: NVE
+  MTU 9216 bytes
+  Encapsulation VXLAN
+  Auto-mdix is turned off
+  RX
+    ucast: 75 pkts, 6342 bytes - mcast: 6 pkts, 284 bytes
+  TX
+    ucast: 92 pkts, 12654 bytes - mcast: 0 pkts, 0 bytes
+
+LEAF2-1# show nve vni
+Codes: CP - Control Plane        DP - Data Plane          
+       UC - Unconfigured         SA - Suppress ARP        
+       S-ND - Suppress ND        
+       SU - Suppress Unknown Unicast 
+       Xconn - Crossconnect      
+       MS-IR - Multisite Ingress Replication 
+       HYB - Hybrid IRB mode
+    
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100065   UnicastBGP        Up    CP   L2 [65]                 
+nve1      100500   n/a               Up    CP   L3 [COD]                
+
+LEAF2-1# show nve vni ingress-replication
+Interface VNI      Replication List  Source  Up Time      
+--------- -------- ----------------- ------- -------      
+
+nve1      100065   1.1.1.3           BGP-IMET 00:57:20    
+```
+
+</details>
+
+<details>
+
+<summary>LEAF2-2</summary>
+
+```
+LEAF2-2# show nve peers
+Interface Peer-IP                                 State LearnType Uptime   Router-Mac       
+--------- --------------------------------------  ----- --------- -------- -----------------
+nve1      1.1.1.3                                 Up    CP        00:50:33 0c6e.0000.1b08   
+nve1      1.1.1.4                                 Up    CP        00:50:33 0cec.0000.1b08   
+nve1      1.2.1.3                                 Up    CP        00:50:33 0cde.0000.1b08 
+
+LEAF2-2# show nve interface
+Interface: nve1, State: Up, encapsulation: VXLAN
+ VPC Capability: VPC-VIP-Only [notified]
+ Local Router MAC: 0cd2.0000.1b08
+ Host Learning Mode: Control-Plane
+ Source-Interface: loopback2 (primary: 1.2.1.2, secondary: 10.1.1.100)
+
+LEAF2-2# show interface nve 1
+nve1 is up
+admin state is up,  Hardware: NVE
+  MTU 9216 bytes
+  Encapsulation VXLAN
+  Auto-mdix is turned off
+  RX
+    ucast: 134 pkts, 12308 bytes - mcast: 6 pkts, 284 bytes
+  TX
+    ucast: 157 pkts, 21574 bytes - mcast: 0 pkts, 0 bytes
+
+LEAF2-2# show nve vni
+Codes: CP - Control Plane        DP - Data Plane          
+       UC - Unconfigured         SA - Suppress ARP        
+       S-ND - Suppress ND        
+       SU - Suppress Unknown Unicast 
+       Xconn - Crossconnect      
+       MS-IR - Multisite Ingress Replication 
+       HYB - Hybrid IRB mode
+    
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100065   UnicastBGP        Up    CP   L2 [65]                 
+nve1      100500   n/a               Up    CP   L3 [COD]                
+
+LEAF2-2# show nve vni ingress-replication
+Interface VNI      Replication List  Source  Up Time      
+--------- -------- ----------------- ------- -------      
+
+nve1      100065   1.1.1.3           BGP-IMET 00:57:41   
+```
+
+</details>
+
+<details>
+
+<summary>LEAF2-3</summary>
+
+```
+LEAF2-3# show nve peers
+Interface Peer-IP                                 State LearnType Uptime   Router-Mac       
+--------- --------------------------------------  ----- --------- -------- -----------------
+nve1      1.1.1.1                                 Up    CP        1d01h    0c9a.0000.1b08   
+nve1      1.1.1.2                                 Up    CP        1d01h    0c63.0000.1b08   
+nve1      1.1.1.3                                 Up    CP        1d00h    0c6e.0000.1b08   
+nve1      1.1.1.4                                 Up    CP        1d00h    0cec.0000.1b08   
+nve1      10.1.1.100                              Up    CP        00:22:57 0200.0a01.0164 
+
+LEAF2-3# show nve interface
+Interface: nve1, State: Up, encapsulation: VXLAN
+ VPC Capability: VPC-VIP-Only [not-notified]
+ Local Router MAC: 0cde.0000.1b08
+ Host Learning Mode: Control-Plane
+ Source-Interface: loopback3 (primary: 1.2.1.3, secondary: 0.0.0.0)
+
+LEAF2-3# show interface nve 1
+nve1 is up
+admin state is up,  Hardware: NVE
+  MTU 9216 bytes
+  Encapsulation VXLAN
+  Auto-mdix is turned off
+  RX
+    ucast: 2020 pkts, 195478 bytes - mcast: 42 pkts, 1988 bytes
+  TX
+    ucast: 2661 pkts, 381514 bytes - mcast: 0 pkts, 0 bytes
+
+LEAF2-3# show nve vni
+Codes: CP - Control Plane        DP - Data Plane          
+       UC - Unconfigured         SA - Suppress ARP        
+       S-ND - Suppress ND        
+       SU - Suppress Unknown Unicast 
+       Xconn - Crossconnect      
+       MS-IR - Multisite Ingress Replication 
+       HYB - Hybrid IRB mode
+    
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100067   UnicastBGP        Up    CP   L2 [67]                 
+nve1      100500   n/a               Up    CP   L3 [COD]                
+nve1      100501   n/a               Up    CP   L3 [TENANT_1]           
+
+LEAF2-3# show nve vni ingress-replication
+Interface VNI      Replication List  Source  Up Time      
+--------- -------- ----------------- ------- -------      
+
+nve1      100067   1.1.1.1           BGP-IMET 1d01h       
+                   1.1.1.2           BGP-IMET 1d01h 
+```
+
+</details>
+
+Содержимое mac-VRF
+
+<details>
+
+<summary>LEAF1-1</summary>
+
+```
+LEAF1-1# show l2route mac all
+
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv (AD):Auto-Delete (D):Del Pending
+(S):Stale (C):Clear, (Ps):Peer Sync (O):Re-Originated (Nho):NH-Override
+(Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Pf):Permanently-Frozen, (Orp): Orphan
+
+(PipOrp): Directly connected Orphan to PIP based vPC BGW 
+(PipPeerOrp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- ------ ------------------- ---------- ---------------------------------------------------------
+67          0242.00c0.8300 Local  L,                 0          Eth1/4                                                   
+67          0242.248c.3e00 BGP    SplRcv             0          1.2.1.3 (Label: 100067)                                  
+67          0242.8632.4200 BGP    SplRcv             0          1.1.1.2 (Label: 100067)                                  
+67          0242.ed27.8200 Local  L,                 0          Eth1/3                                                   
+67          0242.ee8b.bc00 BGP    SplRcv             0          1.2.1.3 (Label: 100067)                                  
+501         0c63.0000.1b08 VXLAN  Rmac               0          1.1.1.2                                                  
+501         0cde.0000.1b08 VXLAN  Rmac               0          1.2.1.3                                                  
+LEAF1-1# show l2route evpn mac-ip all
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+(Ps):Peer Sync (Ro):Re-Originated (Orp):Orphan (Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Piporp): Directly connected Orphan to PIP based vPC BGW 
+(Pipporp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Host IP                                 Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- --------------------------------------- ------ ----------------- ---------- ---------------------------------------------------------
+67          0242.ed27.8200 172.17.67.2                             HMM    L,                 0         Local                                  
+67          0242.00c0.8300 172.17.67.3                             HMM    L,                 0         Local                                  
+67          0242.8632.4200 172.17.67.4                             BGP    --                 0         1.1.1.2 (Label: 100067)                                  
+67          0242.ee8b.bc00 172.17.67.5                             BGP    --                 0         1.2.1.3 (Label: 100067)                                  
+67          0242.248c.3e00 172.17.67.6                             BGP    --                 0         1.2.1.3 (Label: 100067)  
+```
+
+</details>
+
+<details>
+
+<summary>LEAF1-2</summary>
+
+```
+LEAF1-2# show l2route mac all
+
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv (AD):Auto-Delete (D):Del Pending
+(S):Stale (C):Clear, (Ps):Peer Sync (O):Re-Originated (Nho):NH-Override
+(Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Pf):Permanently-Frozen, (Orp): Orphan
+
+(PipOrp): Directly connected Orphan to PIP based vPC BGW 
+(PipPeerOrp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- ------ ------------------- ---------- ---------------------------------------------------------
+67          0242.00c0.8300 BGP    SplRcv             0          1.1.1.1 (Label: 100067)                                  
+67          0242.248c.3e00 BGP    SplRcv             0          1.2.1.3 (Label: 100067)                                  
+67          0242.8632.4200 Local  L,                 0          Eth1/3                                                   
+67          0242.ed27.8200 BGP    SplRcv             0          1.1.1.1 (Label: 100067)                                  
+67          0242.ee8b.bc00 BGP    SplRcv             0          1.2.1.3 (Label: 100067)                                  
+501         0c9a.0000.1b08 VXLAN  Rmac               0          1.1.1.1                                                  
+501         0cde.0000.1b08 VXLAN  Rmac               0          1.2.1.3                                                  
+LEAF1-2# show l2route evpn mac-ip all
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+(Ps):Peer Sync (Ro):Re-Originated (Orp):Orphan (Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Piporp): Directly connected Orphan to PIP based vPC BGW 
+(Pipporp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Host IP                                 Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- --------------------------------------- ------ ----------------- ---------- ---------------------------------------------------------
+67          0242.ed27.8200 172.17.67.2                             BGP    --                 0         1.1.1.1 (Label: 100067)                                  
+67          0242.00c0.8300 172.17.67.3                             BGP    --                 0         1.1.1.1 (Label: 100067)                                  
+67          0242.8632.4200 172.17.67.4                             HMM    L,                 0         Local                                  
+67          0242.ee8b.bc00 172.17.67.5                             BGP    --                 0         1.2.1.3 (Label: 100067)                                  
+67          0242.248c.3e00 172.17.67.6                             BGP    --                 0         1.2.1.3 (Label: 100067)    
+```
+
+</details>
+
+<details>
+
+<summary>LEAF1-3</summary>
+
+```
+LEAF1-3# show l2route mac all
+
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv (AD):Auto-Delete (D):Del Pending
+(S):Stale (C):Clear, (Ps):Peer Sync (O):Re-Originated (Nho):NH-Override
+(Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Pf):Permanently-Frozen, (Orp): Orphan
+
+(PipOrp): Directly connected Orphan to PIP based vPC BGW 
+(PipPeerOrp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- ------ ------------------- ---------- ---------------------------------------------------------
+65          0242.b33e.be00 Local  L,                 0          Eth1/3                                                   
+65          0c8c.4346.8041 BGP    SplRcv             1          10.1.1.100 (Label: 100065)                               
+500         0200.0a01.0164 VXLAN  Rmac               0          10.1.1.100                                               
+500         0cde.0000.1b08 VXLAN  Rmac               0          1.2.1.3                                                  
+500         0cec.0000.1b08 VXLAN  Rmac               0          1.1.1.4                                                  
+LEAF1-3# show l2route evpn mac-ip all
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+(Ps):Peer Sync (Ro):Re-Originated (Orp):Orphan (Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Piporp): Directly connected Orphan to PIP based vPC BGW 
+(Pipporp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Host IP                                 Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- --------------------------------------- ------ ----------------- ---------- ---------------------------------------------------------
+65          0242.b33e.be00 172.16.65.2                             HMM    L,                 0         Local                                  
+65          0c8c.4346.8041 172.16.65.3                             BGP    --                 1         10.1.1.100 (Label: 100065)
+```
+
+</details>
+
+<details>
+
+<summary>LEAF1-4</summary>
+
+```
+LEAF1-4# show l2route mac all
+
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv (AD):Auto-Delete (D):Del Pending
+(S):Stale (C):Clear, (Ps):Peer Sync (O):Re-Originated (Nho):NH-Override
+(Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Pf):Permanently-Frozen, (Orp): Orphan
+
+(PipOrp): Directly connected Orphan to PIP based vPC BGW 
+(PipPeerOrp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- ------ ------------------- ---------- ---------------------------------------------------------
+66          0242.226f.2600 Local  L,                 0          Eth1/3                                                   
+500         0200.0a01.0164 VXLAN  Rmac               0          10.1.1.100                                               
+500         0c6e.0000.1b08 VXLAN  Rmac               0          1.1.1.3                                                  
+500         0cde.0000.1b08 VXLAN  Rmac               0          1.2.1.3                                                  
+LEAF1-4# show l2route evpn mac-ip all
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+(Ps):Peer Sync (Ro):Re-Originated (Orp):Orphan (Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Piporp): Directly connected Orphan to PIP based vPC BGW 
+(Pipporp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Host IP                                 Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- --------------------------------------- ------ ----------------- ---------- ---------------------------------------------------------
+66          0242.226f.2600 172.16.66.2                             HMM    L,                 0         Local 
+```
+
+</details>
+
+<details>
+
+<summary>LEAF2-1</summary>
+
+```
+LEAF2-1# show l2route mac all
+
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv (AD):Auto-Delete (D):Del Pending
+(S):Stale (C):Clear, (Ps):Peer Sync (O):Re-Originated (Nho):NH-Override
+(Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Pf):Permanently-Frozen, (Orp): Orphan
+
+(PipOrp): Directly connected Orphan to PIP based vPC BGW 
+(PipPeerOrp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- ------ ------------------- ---------- ---------------------------------------------------------
+65          0242.b33e.be00 BGP    SplRcv             0          1.1.1.3 (Label: 100065)                                  
+65          0c8c.4346.8041 Local  L,                 1          Po3                                                      
+500         0c6e.0000.1b08 VXLAN  Rmac               0          1.1.1.3                                                  
+500         0cde.0000.1b08 VXLAN  Rmac               0          1.2.1.3                                                  
+500         0cec.0000.1b08 VXLAN  Rmac               0          1.1.1.4                                                  
+LEAF2-1# show l2route evpn mac-ip all
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+(Ps):Peer Sync (Ro):Re-Originated (Orp):Orphan (Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Piporp): Directly connected Orphan to PIP based vPC BGW 
+(Pipporp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Host IP                                 Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- --------------------------------------- ------ ----------------- ---------- ---------------------------------------------------------
+65          0242.b33e.be00 172.16.65.2                             BGP    --                 0         1.1.1.3 (Label: 100065)                                  
+65          0c8c.4346.8041 172.16.65.3                             HMM    L,                 1         Local 
+```
+
+</details>
+
+<details>
+
+<summary>LEAF2-2</summary>
+
+```
+LEAF2-2# show l2route mac all
+
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv (AD):Auto-Delete (D):Del Pending
+(S):Stale (C):Clear, (Ps):Peer Sync (O):Re-Originated (Nho):NH-Override
+(Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Pf):Permanently-Frozen, (Orp): Orphan
+
+(PipOrp): Directly connected Orphan to PIP based vPC BGW 
+(PipPeerOrp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- ------ ------------------- ---------- ---------------------------------------------------------
+65          0242.b33e.be00 BGP    SplRcv             0          1.1.1.3 (Label: 100065)                                  
+65          0c8c.4346.8041 Local  L,                 1          Po3                                                      
+500         0c6e.0000.1b08 VXLAN  Rmac               0          1.1.1.3                                                  
+500         0cde.0000.1b08 VXLAN  Rmac               0          1.2.1.3                                                  
+500         0cec.0000.1b08 VXLAN  Rmac               0          1.1.1.4                                                  
+LEAF2-2# show l2route evpn mac-ip all
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+(Ps):Peer Sync (Ro):Re-Originated (Orp):Orphan (Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Piporp): Directly connected Orphan to PIP based vPC BGW 
+(Pipporp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Host IP                                 Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- --------------------------------------- ------ ----------------- ---------- ---------------------------------------------------------
+65          0242.b33e.be00 172.16.65.2                             BGP    --                 0         1.1.1.3 (Label: 100065)                                  
+65          0c8c.4346.8041 172.16.65.3                             HMM    L,                 1         Local       
+```
+
+</details>
+
+<details>
+
+<summary>LEAF2-3</summary>
+
+```
+LEAF2-3# show l2route mac all
+
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv (AD):Auto-Delete (D):Del Pending
+(S):Stale (C):Clear, (Ps):Peer Sync (O):Re-Originated (Nho):NH-Override
+(Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Pf):Permanently-Frozen, (Orp): Orphan
+
+(PipOrp): Directly connected Orphan to PIP based vPC BGW 
+(PipPeerOrp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- ------ ------------------- ---------- ---------------------------------------------------------
+67          0242.00c0.8300 BGP    SplRcv             0          1.1.1.1 (Label: 100067)                                  
+67          0242.248c.3e00 Local  L,                 0          Eth1/4                                                   
+67          0242.8632.4200 BGP    SplRcv             0          1.1.1.2 (Label: 100067)                                  
+67          0242.ed27.8200 BGP    SplRcv             0          1.1.1.1 (Label: 100067)                                  
+67          0242.ee8b.bc00 Local  L,                 0          Eth1/3                                                   
+500         0200.0a01.0164 VXLAN  Rmac               0          10.1.1.100                                               
+500         0c6e.0000.1b08 VXLAN  Rmac               0          1.1.1.3                                                  
+500         0cec.0000.1b08 VXLAN  Rmac               0          1.1.1.4                                                  
+501         0c63.0000.1b08 VXLAN  Rmac               0          1.1.1.2                                                  
+501         0c9a.0000.1b08 VXLAN  Rmac               0          1.1.1.1                                                  
+LEAF2-3# show l2route evpn mac-ip all
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote 
+(Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+(Ps):Peer Sync (Ro):Re-Originated (Orp):Orphan (Asy):Asymmetric (Gw):Gateway
+(Bh):Blackhole
+(Piporp): Directly connected Orphan to PIP based vPC BGW 
+(Pipporp): Orphan connected to peer of PIP based vPC BGW 
+Topology    Mac Address    Host IP                                 Prod   Flags              Seq No     Next-Hops                              
+----------- -------------- --------------------------------------- ------ ----------------- ---------- ---------------------------------------------------------
+67          0242.ed27.8200 172.17.67.2                             BGP    --                 0         1.1.1.1 (Label: 100067)                                  
+67          0242.00c0.8300 172.17.67.3                             BGP    --                 0         1.1.1.1 (Label: 100067)                                  
+67          0242.8632.4200 172.17.67.4                             BGP    --                 0         1.1.1.2 (Label: 100067)                                  
+67          0242.ee8b.bc00 172.17.67.5                             HMM    L,                 0         Local                                  
+67          0242.248c.3e00 172.17.67.6                             HMM    L,                 0         Local 
+```
+
+</details>
+
+Проверка связности между клиентами
+
+<details>
+
+<summary>endhost-1</summary>
+
+```
+ / # ping 172.17.67.3
+PING 172.17.67.3 (172.17.67.3) 56(84) bytes of data.
+64 bytes from 172.17.67.3: icmp_seq=1 ttl=64 time=2.27 ms
+64 bytes from 172.17.67.3: icmp_seq=2 ttl=64 time=2.32 ms
+64 bytes from 172.17.67.3: icmp_seq=3 ttl=64 time=1.83 ms
+^C
+--- 172.17.67.3 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 1.832/2.139/2.321/0.218 ms
+/ # ping 172.17.67.4
+PING 172.17.67.4 (172.17.67.4) 56(84) bytes of data.
+64 bytes from 172.17.67.4: icmp_seq=1 ttl=64 time=16.4 ms
+64 bytes from 172.17.67.4: icmp_seq=2 ttl=64 time=15.6 ms
+64 bytes from 172.17.67.4: icmp_seq=3 ttl=64 time=17.3 ms
+^C
+--- 172.17.67.4 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 15.553/16.444/17.349/0.733 ms
+/ # ping 172.17.67.5
+PING 172.17.67.5 (172.17.67.5) 56(84) bytes of data.
+64 bytes from 172.17.67.5: icmp_seq=1 ttl=64 time=20.0 ms
+64 bytes from 172.17.67.5: icmp_seq=2 ttl=64 time=12.3 ms
+64 bytes from 172.17.67.5: icmp_seq=3 ttl=64 time=14.1 ms
+^C
+--- 172.17.67.5 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 12.280/15.456/20.034/3.317 ms
+/ # ping 172.17.67.6
+PING 172.17.67.6 (172.17.67.6) 56(84) bytes of data.
+64 bytes from 172.17.67.6: icmp_seq=1 ttl=64 time=12.4 ms
+64 bytes from 172.17.67.6: icmp_seq=2 ttl=64 time=14.4 ms
+64 bytes from 172.17.67.6: icmp_seq=3 ttl=64 time=7.89 ms
+^C
+--- 172.17.67.6 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 7.894/11.549/14.381/2.711 ms
+/ # ping 172.16.65.2
+PING 172.16.65.2 (172.16.65.2) 56(84) bytes of data.
+64 bytes from 172.16.65.2: icmp_seq=1 ttl=59 time=50.5 ms
+64 bytes from 172.16.65.2: icmp_seq=2 ttl=59 time=48.1 ms
+64 bytes from 172.16.65.2: icmp_seq=3 ttl=59 time=30.3 ms
+^C
+--- 172.16.65.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 30.253/42.933/50.450/9.017 ms
+/ # ping 172.16.65.3
+PING 172.16.65.3 (172.16.65.3) 56(84) bytes of data.
+64 bytes from 172.16.65.3: icmp_seq=1 ttl=250 time=46.2 ms
+64 bytes from 172.16.65.3: icmp_seq=2 ttl=250 time=39.0 ms
+64 bytes from 172.16.65.3: icmp_seq=3 ttl=250 time=49.3 ms
+^C
+--- 172.16.65.3 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 38.998/44.823/49.280/4.307 ms
+/ # ping 172.16.66.2
+PING 172.16.66.2 (172.16.66.2) 56(84) bytes of data.
+64 bytes from 172.16.66.2: icmp_seq=1 ttl=59 time=44.0 ms
+64 bytes from 172.16.66.2: icmp_seq=2 ttl=59 time=26.3 ms
+64 bytes from 172.16.66.2: icmp_seq=3 ttl=59 time=38.1 ms
+^C
+--- 172.16.66.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 26.342/36.146/43.956/7.327 ms
+```
+
+</details>
+
+<details>
+
+<summary>endhost-4</summary>
+
+```
+/ # ping 172.16.66.2
+PING 172.16.66.2 (172.16.66.2) 56(84) bytes of data.
+64 bytes from 172.16.66.2: icmp_seq=1 ttl=62 time=18.4 ms
+64 bytes from 172.16.66.2: icmp_seq=2 ttl=62 time=7.87 ms
+64 bytes from 172.16.66.2: icmp_seq=3 ttl=62 time=9.91 ms
+^C
+--- 172.16.66.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 7.872/12.051/18.374/4.547 ms
+```
+
+</details>
 
 #### Дампы Wireshark
 
+<figure><img src="../.gitbook/assets/Dump Lab_9_1.PNG" alt=""><figcaption></figcaption></figure>
 
 
 
+<figure><img src="../.gitbook/assets/Dump Lab_9_2.PNG" alt=""><figcaption></figcaption></figure>
 
 
 
 #### Выводы
 
-Таким образом, нам удалось настроить ликинг между VRF COD и VRF TENANT\_1 с использованием ipv4 BGP сессий в соответствующих vrf между LEAF3 и EDGE роутером, находящимся в другом логическом сегменте.
+Таким образом, нам удалось настроить&#x20;
+
+ликинг между VRF COD и VRF TENANT\_1 с использованием ipv4 BGP сессий в соответствующих vrf между LEAF3 и EDGE роутером, находящимся в другом логическом сегменте.
 
 Маршруты появились на LEAF3 как в ipv4, так и в l2vpn evpn таблицах.&#x20;
 
